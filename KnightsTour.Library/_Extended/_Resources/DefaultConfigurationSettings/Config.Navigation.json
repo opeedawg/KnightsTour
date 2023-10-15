@@ -1,0 +1,29 @@
+[
+  {
+    "Title": "Home",
+    "Url": "/",
+    "NewTab": false
+  },
+  {
+    "Title": "Documentation",
+    "Url": "#/Documentation",
+    "NewTab": false
+  },
+  {
+    "Title": "Administrator",
+    "Security": {
+      "Claim": "Administrator",
+      "Value": "True"
+    },
+    "Children": [
+      {
+        "Title": "Data",
+        "Url": "#/Data"
+      },
+      {
+        "Title": "Configuration",
+        "Url": "#/Config"
+      }
+    ]
+  }
+]

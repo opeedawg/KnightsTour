@@ -1,0 +1,898 @@
+<!--
+* Component: BoardListPage
+* Location:  src\entities\Board\pages\
+* 
+* The page for viewing a @see Board.
+* - Note: The field states are configured in @see BoardConfig class.
+* 
+* @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
+* Generated on January 21, 2023 at 7:35:06 AM
+-->
+
+<template>
+  <GenericConfirmationModal
+    v-if="modalState.get(modalType.GenericConfirmation)"
+    :configuration="genericConfirmationConfiguration"
+    @response="genericConfirmationReponse"
+    persistent
+  />
+
+  <BoardViewModal
+    v-if="
+      entitySettings.modalView &&
+      authorizationInstance.hasPermission('BoardView') &&
+      modalState.get(modalType.View)
+    "
+    @userAction="viewActionResponse"
+    :entity="selectedBoard"
+    persistent
+  ></BoardViewModal>
+
+  <BoardEditModal
+    v-if="
+      entitySettings.modalEdit &&
+      authorizationInstance.hasPermission('BoardEdit') &&
+      modalState.get(modalType.Edit)
+    "
+    @userAction="editActionResponse"
+    :entity="selectedBoard"
+    persistent
+  ></BoardEditModal>
+
+  <BoardInsertModal
+    v-if="
+      entitySettings.modalInsert &&
+      authorizationInstance.hasPermission('BoardInsert') &&
+      modalState.get(modalType.Insert)
+    "
+    @userAction="insertActionResponse"
+    :entity="selectedBoard"
+    persistent
+  ></BoardInsertModal>
+
+  <q-layout>
+    <h3>{{ entitySettings.label }}  Management</h3>
+    <q-page-container>
+      <div class="items-right"></div>
+      <q-table
+        :columns="columns"
+        :loading="loading"
+        :filter="filter"
+        :row-key="entitySettings.primaryKey"
+        :rows="rows"
+        :rows-per-page-options="entitySettings.paginationOptions"
+        :selection="multiSelectMode"
+        :title="entitySettings.label + ' results'"
+        v-model:selected="selected"
+        v-model:pagination="pagination"
+        @request="onRequest"
+      >
+        <template v-slot:top>
+          <table width="100%">
+            <tr>
+              <td
+                v-if="options.length > 0"
+                id="table_customActions"
+                width="15%"
+                text-align="left"
+                style="vertical-align: bottom"
+              >
+                <q-select
+                  v-model="customAction"
+                  clearable
+                  filled
+                  :dense="true"
+                  :disable="customActionsDisabled"
+                  :options="options"
+                  @update:model-value="confirmCustomAction()"
+                >
+                  <template v-slot:prepend>
+                    <q-icon name="more_vert" color="primary" />
+                  </template>
+
+                  <template v-slot:option="scope">
+                    <q-item v-bind="scope.itemProps">
+                      <q-item-section avatar>
+                        <q-icon
+                          :name="scope.opt.icon"
+                          :color="scope.opt.iconColor"
+                        />
+                      </q-item-section>
+                      <q-item-section>
+                        <q-item-label>{{ scope.opt.label }}</q-item-label>
+                        <q-item-label caption>{{
+                          scope.opt.description
+                        }}</q-item-label>
+                      </q-item-section>
+                    </q-item>
+                  </template>
+                </q-select>
+              </td>
+              <td id="table_filters" text-align="left">
+                <q-input
+                  debounce="300"
+                  :dense="projectSettings.renderDenseControls"
+                  :placeholder="entitySettings.label + ' filter'"
+                  v-model="filter"
+                >
+                  <template v-slot:append>
+                    <q-icon :name="materialDesignIcon.Search" />
+                  </template>
+                </q-input>
+
+
+
+
+                <BoardFilterComponent v-if="false" :entities="rows" />
+              </td>
+              <td
+                id="table_commonActions"
+                width="15%"
+                style="text-align: center"
+              >
+                <q-btn
+                  v-if="
+                    entitySettings.modalInsert &&
+                    authorizationInstance.hasPermission('BoardInsert')
+                  "
+                  class="btn-fixed-width"
+                  :icon="entitySettings.addButtonIcon"
+                  :label="entitySettings.addButtonText"
+                  :style="
+                    'margin-right: 10px; color: ' +
+                    entitySettings.addButtonTextColor +
+                    '; background-color: ' +
+                    entitySettings.addButtonBackgroundColor +
+                    ';'
+                  "
+                  :title="
+                    'Add a new ' +
+                    entitySettings.label +
+                    ' record in a modal window'
+                  "
+                  @click="toggleModal(modalType.Insert)"
+                >
+                </q-btn>
+                <q-btn
+                  v-if="
+                    entitySettings.navigateInsert &&
+                    authorizationInstance.hasPermission('BoardInsert')
+                  "
+                  class="btn-fixed-width"
+                  :icon="entitySettings.addButtonIcon"
+                  :label="entitySettings.addButtonText"
+                  :style="
+                    'margin-right: 10px; color: ' +
+                    entitySettings.addButtonTextColor +
+                    '; background-color: ' +
+                    entitySettings.addButtonBackgroundColor +
+                    ';'
+                  "
+                  :title="
+                    'Add a new ' +
+                    entitySettings.label +
+                    ' record'
+                  "
+                  :to="{ name: 'BoardInsert' }"
+                >
+                </q-btn>
+              </td>
+            </tr>
+          </table>
+        </template>
+
+        <template #body-cell-rowAction="props">
+          <q-td :props="props">
+            <span>
+              <q-btn
+                v-if="
+                  entitySettings.modalView &&
+                  authorizationInstance.hasPermission('BoardView')
+                "
+                flat
+                round
+                :icon="entitySettings.viewButtonIcon"
+                :style="'color: ' + entitySettings.viewButtonBackgroundColor"
+                :title="
+                  'View the ' +
+                  entitySettings.label +
+                  ' ' +
+                  props.row.instanceLabel +
+                  ' record in a modal window'
+                "
+                @click="toggleModal(modalType.View, props.row)"
+              >
+              </q-btn>
+            </span>
+            <span>
+              <q-btn
+                v-if="
+                  entitySettings.navigateView &&
+                  authorizationInstance.hasPermission('BoardView')
+                "
+                flat
+                round
+                :icon="entitySettings.viewButtonIcon"
+                :style="'color: ' + entitySettings.viewButtonBackgroundColor"
+                :title="
+                  'View the ' +
+                  entitySettings.label +
+                  ' ' +
+                  props.row.instanceLabel +
+                  ' record'
+                "
+                :to="{
+                  name: 'BoardView',
+                  params: {id: props.row.boardId },
+                }"
+              >
+              </q-btn>
+            </span>
+            <span>
+              <q-btn
+                v-if="
+                  entitySettings.modalEdit &&
+                  authorizationInstance.hasPermission('BoardEdit')
+                "
+                flat
+                round
+                :icon="entitySettings.editButtonIcon"
+                :style="'color: ' + entitySettings.editButtonBackgroundColor"
+                :title="
+                  'Edit the ' +
+                  entitySettings.label +
+                  ' ' +
+                  props.row.instanceLabel +
+                  ' record in a modal window'
+                "
+                @click="toggleModal(modalType.Edit, props.row)"
+              >
+              </q-btn>
+            </span>
+            <span>
+              <q-btn
+                v-if="
+                  entitySettings.navigateEdit &&
+                  authorizationInstance.hasPermission('BoardEdit')
+                "
+                flat
+                round
+                :icon="entitySettings.editButtonIcon"
+                :style="'color: ' + entitySettings.editButtonBackgroundColor"
+                :title="
+                  'Edit the ' +
+                  entitySettings.label +
+                  ' ' +
+                  props.row.instanceLabel +
+                  ' record'
+                "
+                :to="{
+                  name: 'BoardEdit',
+                  params: {id: props.row.boardId },
+                }"
+              >
+              </q-btn>
+            </span>
+            <span>
+              <q-btn
+                v-if="
+                  entitySettings.deleteSingleInList &&
+                  authorizationInstance.hasPermission('BoardDelete')
+                "
+                flat
+                round
+                :icon="entitySettings.viewButtonIcon"
+                :style="'color: ' + entitySettings.deleteButtonBackgroundColor"
+                :title="
+                  'Delete the ' +
+                  entitySettings.label +
+                  ' ' +
+                  props.row.instanceLabel +
+                  ' record'
+                "
+                @click="showConfirmationModal(projectSettings.deleteActionName, props.row)"
+              >
+              </q-btn>
+            </span>
+          </q-td>
+        </template>
+      </q-table>
+    </q-page-container>
+  </q-layout>
+</template>
+<script lang="ts">
+  /** Imports: Required classes, compoenents, controls etc. for this component. */
+  import { Board } from '../models/Board';
+  import { BoardEntitySettings } from '../models/entitySettings';
+  import { BoardStore } from '../stores/Board.store';
+  import { 
+    columns,
+    customActions,
+    filterFields,
+  } from '../models/BoardConfig';
+  import { 
+    DXCustomAction,
+    DXEntityFilter,
+    DXResponse,
+  } from 'src/common/models/dxterity';
+  import { FieldSupport } from 'src/common/models/fieldConfiguration';
+  import { 
+    FormActionArgs,
+    GenericConfirmationArgs,
+  } from 'src/common/models/arguments';
+  import { 
+    GenericConfirmationConfiguration,
+    MaterialDesignIcon,
+    UtilityInstance,
+  } from 'src/common/models/global';
+  import { 
+    MessageType,
+    Messaging,
+  } from 'src/common/models/messaging';
+  import { ProjectSettings } from 'src/common/models/projectSettings';
+  import { ref } from 'vue';
+  import { ToastType } from 'src/common/models/quasar';
+  import AuthorizationInstance from 'src/common/models/authorization';
+  import BoardEditModal from '../modals/BoardEditModal.vue';
+  import BoardFilterComponent from '../components/BoardFilterComponent.vue';
+  import BoardInsertModal from '../modals/BoardInsertModal.vue';
+  import BoardViewModal from '../modals/BoardViewModal.vue';
+  import GenericConfirmationModal from 'src/common/modals/genericConfirmation.vue';
+
+  /** Enumerations */
+  /** Defines the various possible modal types used on this screen. */
+  enum modalType {
+    /** The edit modal. */
+    Edit = 'Edit',
+    /** The generic confirmation modal. */
+    GenericConfirmation = 'GenericConfirmation',
+    /** The insert modal. */
+    Insert = 'Insert',
+    /** The view modal. */
+    View = 'Display',
+  }
+
+
+// Modal visibility states (initialized to all hidden).
+const modalState = new Map<string, boolean>();
+modalState.set(modalType.Insert, false);
+modalState.set(modalType.Edit, false);
+modalState.set(modalType.View, false);
+modalState.set(modalType.GenericConfirmation, false);
+/** Component: BoardListPage
+* - The page for viewing a @see Board.
+* - Note: The field states are configured in @see BoardConfig class.
+*/
+export default {
+  Name: 'BoardListPage',
+  /** Registration of all child components used by this component. */
+  components: {
+    BoardEditModal,
+    BoardFilterComponent,
+    BoardInsertModal,
+    BoardViewModal,
+    GenericConfirmationModal,
+  },
+  /** https://vuejs.org/api/composition-api-setup.html */
+  setup() {
+    /** Default sort column (mandatory for server side lists). */
+    const defaultSortColumn = ref('BoardId');
+    /** Manages the loading feedback. */
+    const loading = ref(false);
+    /** Not exported, but required for setting access below. */
+    const entitySettings = new BoardEntitySettings();
+    /** Bound to the lists pagination control. */
+    const pagination = ref({
+      page: 1,
+      rowsPerPage: entitySettings.paginationSize,
+      sortBy: entitySettings.primaryKeyDB,
+      descending: false,
+      rowsNumber: 100,
+    });
+    /** The filter text bound to the search control in the list header. */
+     const filter = ref('');
+    /** Data bound to the quasar list control 'rows' property. */
+    const rows = ref([] as Board[]);
+    /** A reference to the Board store. */
+    const boardStore = ref(new BoardStore());
+
+    function onRequest(props: any) {
+      const { page, rowsPerPage, sortBy, descending, rowsNumber } = props.pagination;
+      const filter = props.filter;
+
+      // Enable the loading visualization.
+      loading.value = true;
+
+      // Default the sort column if not passed.
+      if (pagination.value.sortBy == null) {
+        pagination.value.sortBy = defaultSortColumn.value;
+      }
+
+      // The DXterity filter sort is a little different, configure here.
+      let dxSort = sortBy;
+      if (descending) {
+        dxSort = sortBy + ' DESC';
+      }
+
+      // Confgure the DXterity entity filter - which is used for both counting and entity filtering.
+      const dxFilter: DXEntityFilter = new DXEntityFilter(
+        page - 1, // The quasar table has a 1 based index (sheesh...)
+        rowsPerPage,
+        dxSort
+      );
+      // If you wanted a hard coded filter for all rows all the time, you can add them like below:
+      //dxFilter.filters.push('[BoardId] = 0');
+      dxFilter.textFilter = filter;
+      dxFilter.textColumns = [];
+      filterFields.forEach(function (dbFieldName: string) {
+        dxFilter.textColumns.push(dbFieldName);
+      });
+
+      // Go grab the count and the actual results from the server.
+      boardStore.value
+        .getCount(dxFilter)
+        .then(function (result: number) {
+          pagination.value.rowsNumber = result;
+        })
+        .then(function () {
+          boardStore.value
+            .getAllFiltered(dxFilter)
+            .then(function (result: Board[]) {
+              rows.value.splice(0, rows.value.length, ...result);
+
+              // Disable the loading visualization.
+              loading.value = false;
+            });
+        });
+
+      // Update the pagination control.
+      pagination.value.page = page;
+      pagination.value.rowsPerPage = rowsPerPage;
+      pagination.value.sortBy = sortBy;
+      pagination.value.descending = descending;
+      pagination.value.rowsNumber = rowsNumber;
+    }
+
+    // As this is the setup VUE section, we need to return fields we wish to be made global.
+    return {
+      boardStore,
+      filter,
+      loading,
+      onRequest,
+      pagination,
+      rows,
+    };
+  },
+  /** https://vuejs.org/api/options-state.html */
+  data: function () {
+    return {
+      /** Provides easy singleton programatic access to all authroization related details for the authenticated user. */
+      authorizationInstance: AuthorizationInstance,
+      /** Columns bound to the quasar list control 'columns' property. */
+      columns: columns,
+      /** The current custom action being performed. */
+      customAction: new DXCustomAction(''),
+      /** Default sort column (mandatory for server side lists). */
+      defaultSortColumn: 'BoardId',
+      /** Provides access to entity level settings. */
+      entitySettings: new BoardEntitySettings(),
+      /** Assists in the management of dynamically authored controls. */
+      fieldSupport: new FieldSupport(document),
+      /** The @see GenericConfirmationConfiguration.  Customizable for each invocation of the modal. */
+      genericConfirmationConfiguration: new GenericConfirmationConfiguration('notSet', 'notSet'),
+      /** A reference to the material design icon list available to this application. */
+      materialDesignIcon: MaterialDesignIcon,
+      /** Initialized a local messaging class for access to all common system wide messaging constructs. */
+      message: new Messaging(),
+      /** The modal states (map of boolean values) to be accessible and manipulated by the controls and functions. */
+      modalState,
+      /** The modal type enum - required by the controls. */
+      modalType,
+      /** A collection of all @see DXCustomAction in the custom action list. */
+      options: [] as DXCustomAction[],
+      /** An original set of entities (not by reference!) used in row restoration on cancelling of an edit, etc. */
+      originalBoards: [] as Board[],
+      /** Provides access to project level settings. */
+      projectSettings: new ProjectSettings(),
+      /** The selected rows (using the built in multi-selction functionality) from the quasar list control. */
+      selected: ref([] as Board[]),
+      /** The selected row. */
+      selectedBoard: new Board(),
+    };
+  },
+  /** https://vuejs.org/guide/essentials/computed.html */
+  computed: {
+    /**
+    * Computed variable customActionsDisabled: 
+    * - Reactfully updates if the custom action drop down should be enabled or not.
+    * @returns {boolean} Is the control enabled or not?
+    */
+    customActionsDisabled: function (): boolean {
+      return this.selected.length == 0;
+    }, // customActionsDisabled
+
+    /**
+    * Computed variable multiSelectMode: 
+    * - Reactfully determines the render of the multi-select column.
+    * @returns {'multiple' | 'none'} multiple | none
+    */
+    multiSelectMode: function (): 'multiple' | 'none' {
+      return this.options.length > 0 ? 'multiple' : 'none';
+    }, // multiSelectMode
+
+  },
+  /** https://programeasily.com/2021/05/16/lifecycle-hooks-in-vue-3/ */
+  mounted: function () {
+    let self = this;
+
+    // Add a blank entry if there are already other entries.
+    if (customActions.length > 0) {
+      self.options.push(new DXCustomAction(''));
+    }
+
+    // Append all the other defined custom actions.
+    customActions.forEach(function (action: DXCustomAction) {
+      if (action.isMultiple) {
+        self.options.push(action);
+      }
+    });
+
+    this.customAction = customActions[0];
+
+    this.onRequest({pagination: this.pagination });
+  },
+  /** https://vuejs.org/guide/essentials/reactivity-fundamentals.html#declaring-methods */
+  methods: {
+    /**
+    * Computed variable confirmCustomAction: 
+    * - Invokes a generic confirmation modal for a custom action (if configured to do so).
+    * @returns {void} Nothing
+    */
+    confirmCustomAction: function (): void {
+      let self = this;
+      this.customAction.selectedItems = this.selected;
+      this.genericConfirmationConfiguration.customAction = this.customAction;
+
+      if (this.customAction.isDefined) {
+        if (this.customAction.confirmationMessage.length > 0) {
+          this.genericConfirmationConfiguration.isCustomAction = true;
+          this.genericConfirmationConfiguration.message =
+            this.customAction.confirmationMessage;
+          self.showConfirmationModal(this.customAction.value);
+        } else {
+          this.doMultiSelectAction(this.customAction);
+        }
+      }
+    }, // confirmCustomAction
+
+    /**
+    * Computed variable doMultiSelectAction: 
+    * - Invokes the call to the logic tier to execute the custom action.
+    * @param {DXCustomAction} operation: The @see DXCustomAction to execute.
+    * @returns {void} Nothing
+    */
+    doMultiSelectAction: function (
+      operation: DXCustomAction
+    ): void {
+      const context = this;
+      this.boardStore
+        .doCustomOperation(operation.value, this.selected)
+        .then(function (response) {
+          if (response.isValid) {
+            if (response.messages.length > 0) {
+              UtilityInstance.toast(response.messages[0].content, ToastType.Positive);
+            } else {
+              UtilityInstance.toast(
+                context.message.getMessage(MessageType.OperationSuccess, {
+                  customAction: operation,
+                }),
+                ToastType.Positive
+              );
+            }
+          } else {
+            UtilityInstance.toast(
+              context.message.getMessage(MessageType.OperationFailed, {
+                customAction: operation,
+              }),
+              ToastType.Negative
+            );
+          }
+        });
+    }, // doMultiSelectAction
+
+    /**
+    * Computed variable editActionResponse: 
+    * - Performs whatever action is required on the completion of an edit form.
+    * @param {FormActionArgs} formAction: The @see FormActionArgs argument data returned from the form.
+    * @returns {void} Nothing
+    */
+    editActionResponse: function (
+      formAction: FormActionArgs
+    ): void {
+      if (formAction.action == this.projectSettings.updateActionName) {
+        this.update(true, formAction.data);
+      } else if (formAction.action == this.projectSettings.cancelActionName) {
+        this.entitySettings.toast(MessageType.EditCancelled);
+      }
+
+      // Closes all edit modal windows.
+      this.toggleModal(modalType.Edit);
+    }, // editActionResponse
+
+    /**
+    * Computed variable genericConfirmationReponse: 
+    * - Invoked when the generic confirmation modal raises an event.
+    * @param {GenericConfirmationArgs} confirmationArguments: The @see GenericConfirmationArgs response object.
+    * @returns {void} Nothing
+    */
+    genericConfirmationReponse: function (
+      confirmationArguments: GenericConfirmationArgs
+    ): void {
+      var context = this;
+      if (confirmationArguments.result) {
+        if (confirmationArguments.customAction.isDefined) {
+          this.doMultiSelectAction(confirmationArguments.customAction);
+        } else if (
+          confirmationArguments.id == this.projectSettings.deleteActionName
+        ) {
+          this.boardStore
+            .delete((<Board>confirmationArguments.data).boardId)
+            .then(function (response: DXResponse) {
+              if (response.isValid) {
+                if (context.entitySettings.toastOnDelete) {
+                  UtilityInstance.toast(
+                    context.message.getMessage(MessageType.DeleteSuccess, {
+                      entitySettings: context.entitySettings,
+                    }),
+                    ToastType.Positive
+                  );
+                }
+
+                // Reloads the data from the server.
+                context.onRequest({pagination: context.pagination });
+              } else {
+                if (context.entitySettings.toastOnException) {
+                  UtilityInstance.toast(
+                    context.message.getMessage(MessageType.DeleteSingleFailed, {
+                      entitySettings: context.entitySettings,
+                      error: response.messages[0].content,
+                    }),
+                    ToastType.Negative
+                  );
+                }
+              }
+            });
+        } else {
+          // Handle your custom SUCCESS cases here
+          UtilityInstance.toast(
+            this.message.getMessage(MessageType.GenericConfirmation, {
+              genericConfirmationArgs: confirmationArguments,
+            }),
+            ToastType.Information
+          );
+        }
+      } else {
+        if (
+          confirmationArguments.id == this.projectSettings.deleteActionName
+        ) {
+          if (context.entitySettings.toastOnCancel) {
+            UtilityInstance.toast(
+              this.message.getMessage(MessageType.DeleteCancelled),
+              ToastType.Information
+            );
+          }
+        } else {
+          // Handle your custom CANCEL cases here
+          UtilityInstance.toast(
+            this.message.getMessage(MessageType.GenericConfirmation, {
+              genericConfirmationArgs: confirmationArguments,
+            }),
+            ToastType.Information
+          );
+        }
+      }
+
+      // This gets toggled off every time not matter what the result.
+      this.toggleModal(modalType.GenericConfirmation);
+    }, // genericConfirmationReponse
+
+    /**
+    * Computed variable insert: 
+    * - Invokes the insert call to the logic tier to insert the @see Board.
+    * @param {boolean} modalConfirmed: The status of the modal response.
+    * @param {Board} Board: The @see Board to insert.
+    * @returns {void} Nothing
+    */
+    insert: function (
+      modalConfirmed: boolean,
+      Board: Board
+    ): void {
+      // Make call to service to insert the Board.
+      if (modalConfirmed) {
+        var context = this;
+        this.boardStore
+          .insert(Board)
+          .then(function (response: DXResponse) {
+            if (response.isValid) {
+              if (context.entitySettings.toastOnInsert) {
+                UtilityInstance.toast(
+                  context.message.getMessage(MessageType.InsertSuccess, {
+                    entitySettings: context.entitySettings,
+                  }),
+                  ToastType.Positive
+                );
+              }
+            } else {
+              if (context.entitySettings.toastOnException) {
+                UtilityInstance.toast(
+                  context.message.getMessage(MessageType.InsertFailed, {
+                    entitySettings: context.entitySettings,
+                    error: response.messages[0].content,
+                  }),
+                  ToastType.Negative
+                );
+              }
+            }
+          });
+      }
+
+      // Reloads the data from the server.
+      this.onRequest({pagination: this.pagination });
+    }, // insert
+
+    /**
+    * Computed variable insertActionResponse: 
+    * - Performs whatever action is required on the completion of a insert form.
+    * @param {FormActionArgs} formAction: The @see FormActionArgs argument data returned from the form.
+    * @returns {void} Nothing
+    */
+    insertActionResponse: function (
+      formAction: FormActionArgs
+    ): void {
+      if (formAction.action == this.projectSettings.insertActionName) {
+        this.insert(true, formAction.data);
+      } else if (
+        formAction.action == this.projectSettings.cancelActionName &&
+        this.entitySettings.toastOnCancel
+      ) {
+        UtilityInstance.toast(
+          this.message.getMessage(MessageType.InsertCanceled),
+          ToastType.Information
+        );
+      }
+
+      // Always toggle this modal.
+      this.toggleModal(modalType.Insert);
+    }, // insertActionResponse
+
+    /**
+    * Computed variable showConfirmationModal: 
+    * - Shows the generic confirmation modal with any customizations applied.
+    * @param {string} genericModalType: The name of the generic modal.
+    * @param {Board} payload?: The optional @see Board data related to the toggle event.
+    * @returns {void} Nothing
+    */
+    showConfirmationModal: function (
+      genericModalType: string,
+      payload?: Board
+    ): void {
+      // Set the payload.
+      if (payload != null) {
+        this.selectedBoard = payload;
+      }
+      this.genericConfirmationConfiguration.id = genericModalType;
+
+      // Customize the generic modal based on type.  @see GenericConfirmationConfiguration for all possible options.
+      switch (genericModalType) {
+        case this.projectSettings.deleteActionName: {
+          this.genericConfirmationConfiguration.message =
+            this.message.getMessage(MessageType.DeleteSingleConfirmation, {
+              entitySettings: this.entitySettings,
+              instanceLabel: this.selectedBoard.instanceLabel,
+            });
+          this.genericConfirmationConfiguration.title = this.message.getMessage(MessageType.DeleteSingleConfirmationTitle);
+          this.genericConfirmationConfiguration.confirmationText = this.message.getMessage(MessageType.DeleteSingleConfirmationText);
+          this.genericConfirmationConfiguration.cancelText = this.message.getMessage(MessageType.DeleteSingleCancelText);
+          this.genericConfirmationConfiguration.data = this.selectedBoard;
+          break;
+        }
+      }
+
+      // Show the modal.
+      this.modalState.set(modalType.GenericConfirmation, true);
+    }, // showConfirmationModal
+
+    /**
+    * Computed variable toggleModal: 
+    * - Toggles the specific modal (reversing its current visibility state), if nothing is passed all modals are closed.  If a payload is passed it is assigned and passed through to the modal.
+    * @param {modalType} modal?: The @see modalType to toggle (optional).
+    * @param {any} payload?: The optional data related to the toggle event.
+    * @returns {void} Nothing
+    */
+    toggleModal: function (
+      modal?: modalType,
+      payload?: any
+    ): void {
+      if (modal != null) {
+        // Set the payload - null is acceptable here.
+        this.selectedBoard = payload;
+
+        // Switch the visibility status.
+        this.modalState.set(modal, !modalState.get(modal));
+      } else {
+        // If no modal is passed, close them all (dynamically).
+        this.modalState.forEach((value, key) => {
+          this.modalState.set(key, false);
+        });
+      }
+    }, // toggleModal
+
+    /**
+    * Computed variable update: 
+    * - Invokes the update call to the logic tier to update the @see Board.
+    * @param {boolean} modalConfirmed: The status of the modal response.
+    * @param {Board} Board: The @see Board to update.
+    * @returns {void} Nothing
+    */
+    update: function (
+      modalConfirmed: boolean,
+      Board: Board
+    ): void {
+      // Make call to service to update the Board.
+      if (modalConfirmed) {
+        var context = this;
+        this.boardStore
+          .update(Board)
+          .then(function (response: DXResponse) {
+            if (response.isValid) {
+              if (context.entitySettings.toastOnUpdate) {
+                UtilityInstance.toast(
+                  context.message.getMessage(MessageType.UpdateSuccess, {
+                    entitySettings: context.entitySettings,
+                  }),
+                  ToastType.Positive
+                );
+              }
+            } else {
+              if (context.entitySettings.toastOnException) {
+                UtilityInstance.toast(
+                  context.message.getMessage(MessageType.UpdateFailed, {
+                    entitySettings: context.entitySettings,
+                    error: response.messages[0].content,
+                  }),
+                  ToastType.Negative
+                );
+              }
+            }
+        });
+      }
+
+      // Reloads the data from the server.
+      this.onRequest({pagination: this.pagination });
+    }, // update
+
+    /**
+    * Computed variable viewActionResponse: 
+    * - Performs whatever action is required on the completion of a view form.
+    * @param {FormActionArgs} formAction: The @see FormActionArgs argument data returned from the form.
+    * @returns {void} Nothing
+    */
+    viewActionResponse: function (
+      formAction: FormActionArgs
+    ): void {
+      if (formAction.action == this.projectSettings.closeActionName) {
+        if (this.entitySettings.toastOnClose) {
+          UtilityInstance.toast(
+            this.message.getMessage(MessageType.FormClosed),
+            ToastType.Information
+          );
+        }
+      }
+
+      // Always toggle this modal.
+      this.toggleModal(modalType.View);
+    }, // viewActionResponse
+
+  },
+};
+</script>

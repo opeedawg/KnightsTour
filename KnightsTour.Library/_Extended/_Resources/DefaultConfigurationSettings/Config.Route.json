@@ -1,0 +1,6 @@
+[
+  {
+    "Route": "",  //e.g. User/Detail
+    "Target": ""  //e.g. User/Portal
+  }
+]

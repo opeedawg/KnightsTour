@@ -1,0 +1,150 @@
+<!--
+* Component: DifficultyLevelInsertPage
+* Location:  src\entities\DifficultyLevel\pages\
+* 
+* The page displayed inserting a new @see DifficultyLevel.
+* Note: The field states are configured in @see DifficultyLevelConfig class.
+* 
+* @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
+* Generated on October 14, 2023 at 10:21:15 AM
+-->
+
+<template>
+  <q-layout>
+    <q-card style="min-width: 350px">
+      <q-card-section>
+        <div class="text-h6">New Difficulty level</div>
+      </q-card-section>
+      <q-card-section class="q-pt-none">
+        <DifficultyLevelFieldsComponent
+          v-if="pageLoaded"
+          :pageState="pageState"
+          :entity="entity"
+          :formActions="actions"
+          @userAction="processFieldsAction"
+        ></DifficultyLevelFieldsComponent>
+      </q-card-section>
+    </q-card>
+  </q-layout>
+</template>
+<script lang="ts">
+  /** Imports: Required classes, components, controls etc. for this component. */
+  import { DifficultyLevel } from '../models/DifficultyLevel';
+  import { DifficultyLevelEntitySettings } from '../models/entitySettings';
+  import { DifficultyLevelStore } from '../stores/DifficultyLevel.store';
+  import { FormAction } from 'src/common/models/formAction';
+  import { FormActionArgs } from 'src/common/models/arguments';
+  import { MessageType, Messaging } from 'src/common/models/messaging';
+  import { PageState, PostInsertNavigationOption } from 'src/common/models/enumerations';
+  import { ProjectSettings } from '../../../common/models/projectSettings';
+  import { ToastType } from '../../../common/models/quasar';
+  import { useRouter } from 'vue-router';
+  import { UtilityInstance } from 'src/common/models/global';
+  import DifficultyLevelFieldsComponent from '../components/DifficultyLevelFieldsComponent.vue';
+
+
+/** Component: DifficultyLevelInsertPage
+* - The page displayed inserting a new @see DifficultyLevel.
+* Note: The field states are configured in @see DifficultyLevelConfig class.
+*/
+export default {
+  Name: 'DifficultyLevelInsertPage',
+  /** Registration of all child components used by this component. */
+  components: {
+    DifficultyLevelFieldsComponent,
+  },
+  /** https://vuejs.org/api/options-state.html */
+  data: function () {
+    return {
+      /** The list of @see FormAction do be rendered on this page. */
+      actions: [] as FormAction[],
+      /** The store reference to access all @see DifficultyLevel related functionality. */
+      difficultylevelStore: new DifficultyLevelStore(),
+      /** The @see DifficultyLevel in which to render. */
+      entity: new DifficultyLevel(),
+      /** Provides access to entity level settings. */
+      entitySettings: new DifficultyLevelEntitySettings(),
+      /** Initialized a local messaging class for access to all common system wide messaging constructs. */
+      message: new Messaging(),
+      /** Used in react page state management. */
+      pageLoaded: false,
+      /** The @see PageState (applies various field rules). */
+      pageState: '',
+      /** Provides access to project level settings. */
+      projectSettings: new ProjectSettings(),
+      /** A refererence to the global router to allow for programatic navigation. */
+      router: useRouter(),
+    };
+  },
+  /** https://programeasily.com/2021/05/16/lifecycle-hooks-in-vue-3/ */
+  mounted: function () {
+    // This determines the form field states, based on the rule configurations defined in @see DifficultyLevelConfig.
+    this.pageState = PageState.Insert;
+
+    // You can customize these actions or add other actions here if required.
+    this.actions.push(this.entitySettings.listAction);
+    this.actions.push(this.entitySettings.insertAction);
+
+    // Set the page as loaded.
+    this.pageLoaded = true;
+  },
+  /** https://vuejs.org/guide/essentials/reactivity-fundamentals.html#declaring-methods */
+  methods: {
+    /**
+    * Computed variable processFieldsAction: 
+    * - 'Generically gathers an attribute collection for field binding.'
+    * @param {FormActionArgs} args: The action performed on this component, raised to the parent page.
+    * @returns {any} Dynamic object of attributes to bind to the control.
+    */
+    processFieldsAction: function (
+      args: FormActionArgs
+    ): any {
+      if (args.action == this.projectSettings.insertActionName) {
+        try {
+          this.difficultylevelStore.insert(args.data).then((response) => {
+            if (response.isValid) {
+              if (this.entitySettings.toastOnInsert) {
+                UtilityInstance.toastResponse(response);
+              }
+
+              // Construct the route for post insert navigation.
+              let postInsertRoute:any = {
+                name: 'DifficultyLevel' + this.entitySettings.navigationAfterInsert,
+              };
+
+              // We need to pass the id as a paramter if not navigating to the list page.
+              if (
+                this.entitySettings.navigationAfterInsert !=
+                PostInsertNavigationOption.List
+              ) {
+                postInsertRoute['params'] = { id: (<DifficultyLevel>response.dataObject).difficultyLevelId };
+              }
+
+              // Perform the navigation.
+              this.router.push(postInsertRoute);
+            } else {
+              if (this.entitySettings.toastOnException) {
+                UtilityInstance.toastResponse(response);
+              }
+            }
+          });
+        } catch (err: any) {
+          if (this.entitySettings.toastOnException) {
+            UtilityInstance.toast(
+              this.message.getMessage(MessageType.InsertFailed, {
+                entitySettings: this.entitySettings,
+                error: err.message,
+              }),
+              ToastType.Negative
+            );
+          }
+        }
+      } else if (args.action == this.projectSettings.listActionName) {
+        // Perform the navigation.
+        this.router.push({ name: 'DifficultyLevelList' });
+      }
+    }, // processFieldsAction
+
+  },
+};
+</script>

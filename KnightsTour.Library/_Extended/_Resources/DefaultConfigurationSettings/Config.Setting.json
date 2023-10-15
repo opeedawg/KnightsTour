@@ -1,0 +1,13 @@
+{
+  "SiteRegistration": false, //true, if Site implements IAuthenticationService.Register
+  "AppName": "KnightsTour",
+  "HomeUrl": "Data", //The home URL of the site
+  "AppUrl": "http://localhost:8080",
+  "ApiUrl": "http://localhost:3131",
+  "LogoUrl": "https://freesvg.org/img/logo-generic.png",
+  "DocumentationUrl": "",
+  "AesCryptographyKey": "",
+  "Offline": false,
+  "OfflineEnd": "",
+  "OfflineIgnore": []
+}

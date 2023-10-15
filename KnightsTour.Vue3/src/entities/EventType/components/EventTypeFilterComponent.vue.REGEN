@@ -1,0 +1,189 @@
+<!--
+* Component: EventTypeFilterComponent
+* Location:  src\entities\EventType\components\
+* 
+* Renders filter fields related to the @see EventType class.
+* - Note: The filter fields are configured in @see EventTypeConfig class.
+* 
+* @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
+* Generated on January 21, 2023 at 11:28:23 AM
+-->
+
+<template>
+  <q-card>
+    <q-tabs
+      v-model="tab"
+      dense
+      class="text-grey"
+      active-color="primary"
+       indicator-color="primary"
+      align="justify"
+    >
+      <q-tab
+        name="filter_Custom"
+        label="Filter: Custom"
+        class="filterCustomTab"
+      />
+      <q-tab
+        name="filter_Predefined"
+        label="Filter: Predefined"
+        class="filterPredefinedTab"
+      />
+      <q-tab
+        name="filter_Personal"
+        label="Filter: Personal"
+        class="filterPersonalTab"
+      />
+    </q-tabs>
+
+    <q-tab-panels v-model="tab" animated>
+      <q-tab-panel name="filter_Custom">
+        <span v-if="textConfigurations.length > 0">
+          <TextFilter @filterChanged="applyFilter"></TextFilter>
+        </span>
+        <span
+          v-for="configuration in booleanConfigurations"
+          :key="configuration.propertyName"
+        >
+          <BooleanFilter :configuration="configuration"></BooleanFilter>
+        </span>
+        <span
+          v-for="configuration in selectConfigurations"
+          :key="configuration.propertyName"
+        >
+          <SelectFilter :configuration="configuration"></SelectFilter>
+        </span>
+        <span
+          v-for="configuration in dateConfigurations"
+          :key="configuration.propertyName"
+        >
+          <DateFilter :configuration="configuration"></DateFilter>
+        </span>
+      </q-tab-panel>
+      <q-tab-panel name="filter_Predefined"
+        >Pre-defined filter controls</q-tab-panel
+      >
+      <q-tab-panel name="filter_Personal">Personal filter controls</q-tab-panel>
+    </q-tab-panels>
+  </q-card>
+
+</template>
+<script lang="ts">
+  /** Imports: Required classes, compoenents, controls etc. for this component. */
+  import { EventType } from '../models/EventType';
+  import { EventTypePropertyNames } from '../models/base/EventTypeBase';
+  import { FieldConfiguration } from 'src/common/models/fieldConfiguration';
+  import { 
+    fieldConfigurations,
+    filterFields,
+  } from '../models/EventTypeConfig';
+  import { FilterFieldArgs } from 'src/common/models/arguments';
+  import { 
+    PropType,
+    ref,
+  } from 'vue';
+  import { QDataType } from 'src/common/models/quasar';
+  import TextFilter from 'src/common/components/filterFields/textFilter.vue';
+
+
+/** Component: EventTypeFilterComponent
+* - Renders filter fields related to the @see EventType class.
+* - Note: The filter fields are configured in @see EventTypeConfig class.
+*/
+export default {
+  Name: 'EventTypeFilterComponent',
+  /** Registration of all child components used by this component. */
+  components: {
+    TextFilter,
+  },
+  /** https://vuejs.org/guide/components/props.html */
+  props: {
+    /** The collection of @see EventType to filter. */
+    entities: {
+      type: Array as PropType<EventType[]>,
+      required: true,
+    },
+  },
+  /** https://vuejs.org/api/composition-api-setup.html */
+  setup() {
+    const textConfigurations = [] as FieldConfiguration[];
+    const selectConfigurations = [] as FieldConfiguration[];
+    const booleanConfigurations = [] as FieldConfiguration[];
+    const dateConfigurations = [] as FieldConfiguration[];
+    const currentFilter = new Map<string, string>();
+
+    filterFields.forEach(function (configuration: FieldConfiguration) {
+      const filterId = 'filter_' + configuration.propertyName;
+      if (configuration.dataType == QDataType.string) {
+        textConfigurations.push(configuration);
+        currentFilter.set(filterId, '');
+        if (configuration.options && configuration.options.length > 0) {
+          selectConfigurations.push(configuration);
+        }
+      } else if (configuration.dataType == QDataType.date) {
+        dateConfigurations.push(configuration);
+        currentFilter.set(filterId + 'From', '');
+        currentFilter.set(filterId + 'To', '');
+      } else if (configuration.dataType == QDataType.boolean) {
+        booleanConfigurations.push(configuration);
+        currentFilter.set(filterId, '');
+      }
+    });
+
+    // Derived
+    return {
+      tab: ref('filter_Custom'),
+      textConfigurations,
+      selectConfigurations,
+      booleanConfigurations,
+      dateConfigurations,
+      currentFilter,
+    };
+  },
+  /** https://vuejs.org/api/options-state.html */
+  data: function () {
+    return {
+      /** The collection of @see FieldConfiguration used on this filter. */
+      fieldConfigurations,
+    };
+  },
+  /** https://vuejs.org/guide/essentials/reactivity-fundamentals.html#declaring-methods */
+  methods: {
+    /**
+    * Computed variable applyFilter: 
+    * - 'Updates the filter for the parent control.'
+    * @param {FilterFieldArgs} filterArgument: The filter arguments.  See @FilterFieldArgs
+    * @returns {void} Nothing
+    */
+    applyFilter: function (
+      filterArgument: FilterFieldArgs
+    ): void {
+      const filterId = 'filter_' + filterArgument.field.propertyName;
+      if (filterArgument.field.dataType != QDataType.date) {
+        this.currentFilter.set(filterId, filterArgument.value);
+      } else {
+        this.currentFilter.set(
+          filterId + filterArgument.options.type, //Adds the From or the To
+          filterArgument.value
+        );
+      }
+    }, // applyFilter
+
+    /**
+    * Computed variable getAttribute: 
+    * - 'Generically gathers an attribute collection for field binding.'
+    * @param {EventTypePropertyNames} property: The property name for which to retrieve the attribute settings.
+    * @returns {any} Dynamic object of attributes to bind to the control.
+    */
+    getAttribute: function (
+      property: EventTypePropertyNames
+    ): any {
+      let self = this;
+      return {
+        configuration: self.fieldConfigurations.get(property),
+      };
+    }, // getAttribute
+
+  },
+};
+</script>
