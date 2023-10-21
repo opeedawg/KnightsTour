@@ -180,11 +180,14 @@ namespace KnightsTour
         public IActionResponse CompleteSolution(int solutionId, HttpRequest request)
         {
             IActionResponse response = new ActionResponse("UpdateSolutionPath");
+            string solutionCode = string.Empty;
             try
             {
                 Solution solution = GetById(solutionId);
                 if (solution != null)
                 {
+                    solutionCode = Guid.NewGuid().ToString();
+                    solution.Code = solutionCode;
                     decimal solutionDuration = decimal.Parse(Math.Round(DateTime.Now.Subtract(solution.SolutionStartDate).TotalSeconds, 2).ToString());
 
                     solution.SolutionDuration = solutionDuration;
@@ -206,6 +209,10 @@ namespace KnightsTour
                 EventHistoryLogic.Add(Enumerations.EventType.Exception, $"{{function: \"SolutionLogic.UpdateSolutionPath\", exception: \"{GetCompleteExceptionMessage(exception)}\"}}", request);
             }
 
+            response.DataObject = null;
+            if (response.IsValid)
+                response.DataObject = solutionCode;
+
             return response;
         }
         public IActionResponse InsertNonMemberSolution(SolutionLite solution, HttpRequest request)
@@ -213,6 +220,7 @@ namespace KnightsTour
             IActionResponse response = new ActionResponse("InsertNonMemberSolution");
             try
             {
+                solution.Code = Guid.NewGuid().ToString();
                 solution.MemberId = null;
 
                 if (string.IsNullOrEmpty(solution.NonMemberName))
@@ -226,6 +234,10 @@ namespace KnightsTour
                 response.Append(exception);
                 EventHistoryLogic.Add(Enumerations.EventType.Exception, $"{{function: \"SolutionLogic.InsertNonMemberSolution\", exception: \"{GetCompleteExceptionMessage(exception)}\"}}", request);
             }
+
+            response.DataObject = null;
+            if(response.IsValid)
+                response.DataObject = solution.Code;
 
             return response;
         }

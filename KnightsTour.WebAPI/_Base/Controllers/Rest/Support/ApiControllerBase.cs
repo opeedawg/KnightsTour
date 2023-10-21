@@ -352,7 +352,22 @@ namespace WebAPI.RestControllers
         /// <param name="message"></param>
         void WriteErrorLog(string message)
         {
-            System.IO.File.AppendAllLines($"\\\\Lilnas\\web\\log\\KT_APIErrorLog_{DateTime.Now.ToString("yyyy-MM-dd")}.txt", new List<string>() { $"{DateTime.Now.ToLongDateString()}: {message}" });
+            System.IO.File.AppendAllLines($"E:\\Development\\KnightsTour\\Logs\\KT_APIErrorLog_{DateTime.Now.ToString("yyyy-MM-dd")}.txt", new List<string>() { $"{DateTime.Now.ToLongDateString()}: {message}" });
+        }
+        protected IActionResponse FormatException(Exception exception)
+        {
+            IActionResponse response = new ActionResponse();
+
+            if(exception.InnerException != null)
+            {
+                response.Append(FormatException(exception.InnerException));
+            }
+            else
+            {
+                response.Append(exception);
+            }
+
+            return response;
         }
         #endregion
     }

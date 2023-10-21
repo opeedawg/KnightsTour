@@ -1,0 +1,278 @@
+// app global css in Sass form
+
+html {
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background-color: #1d1d1d;
+  font-size: 16px;
+}
+
+h1 {
+  color: white;
+  font-size: 72px;
+  margin-bottom: 10px;
+}
+.header {
+  font-size: 30px;
+  padding-left: 20px;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+  border-bottom: solid 1px white;
+}
+li.quote {
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: '\201C''\201D''\2018''\2019';
+  font-style: italic;
+}
+p.hint {
+  color: #ddd;
+}
+span.definition {
+  display: inline-block;
+  width: 180px;
+  font-weight: bold;
+}
+
+table.puzzleBoard {
+  border: solid 2px white;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+}
+td.puzzleCell {
+  height: 50px;
+  width: 50px;
+  border: solid 1px gray;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 12pt;
+  color: white;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+    'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+  border: 1px solid #000;
+  padding: 0px;
+  margin: 0px;
+  empty-cells: show;
+}
+td.puzzleCellStart {
+  background-color: green;
+  color: white;
+}
+td.puzzleCellEnd {
+  background-color: rgb(177, 52, 3);
+  color: white;
+}
+td.closest {
+  background-color: lightgreen;
+  color: black;
+}
+span.puzzleHint {
+  font-weight: 900;
+}
+td.clickable {
+  cursor: pointer;
+}
+td.editable {
+  cursor: text;
+}
+td.helperCell {
+  height: 40px;
+  width: 40px;
+  font-size: 10pt;
+}
+
+.button {
+  margin-right: 10px;
+}
+
+.action {
+  color: white;
+  background-color: #1976d2;
+}
+
+.positive {
+  color: white;
+  background-color: forestgreen;
+}
+
+.messageModal {
+  max-width: 700px;
+  width: 700px;
+  padding: 20px;
+  min-height: 400px;
+  max-height: 400px;
+}
+.q-dialog__backdrop {
+  backdrop-filter: blur(7px);
+}
+.q-dialog__inner--minimized > div {
+  max-width: 700px;
+}
+
+input.puzzleInput {
+  height: 48px;
+  width: 48px;
+  text-align: center;
+  background-color: #2f2f2f;
+  color: grey;
+  border: none;
+  font-weight: 100;
+}
+input.puzzleInputHighlight {
+  background-color: lightgreen;
+  color: black;
+}
+
+input.duplicate {
+  background-color: #c10015;
+  color: white;
+}
+td.duplicate {
+  background-color: #c10015;
+  color: white;
+}
+input.disconnected {
+  background-color: yellow !important;
+  color: black;
+}
+td.disconnected {
+  background-color: yellow !important;
+  color: black;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+.doc-note {
+  font-family: Avenir, -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica,
+    Arial, sans-serif;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin: 16px 0;
+  padding: 16px 24px;
+  font-size: 1em;
+  line-height: 1.35em;
+  border-width: 0 5px;
+  border-style: solid;
+  border-color: #eee;
+  letter-spacing: 0.5px;
+  color: black;
+}
+
+.doc-note .doc-token {
+  color: #000;
+}
+
+.doc-note > p,
+.doc-note > ul {
+  margin-bottom: 0;
+}
+
+.doc-note--tip {
+  background-color: #daf8e1;
+  border-color: #9cedaf;
+}
+
+.doc-note--tip .doc-token {
+  border-width: 0;
+  background: #9cedaf;
+}
+
+.doc-note--tip .doc-link {
+  color: #15792d;
+}
+
+.doc-note--warning {
+  background-color: #fcf2d7;
+  border-color: #f9e09b;
+}
+
+.doc-note--warning .doc-token {
+  border-width: 0;
+  background: #f7d987;
+}
+
+.doc-note--warning .doc-link {
+  color: #99730a;
+}
+
+.doc-note--danger {
+  background-color: #ffdfe3;
+  border-color: #ff808e;
+}
+
+.doc-note--danger .doc-token {
+  border-width: 0;
+  background: #ff808e;
+}
+
+.doc-note--danger .doc-link {
+  color: #910010;
+}
+
+.doc-note__title {
+  font-weight: 500;
+  padding-bottom: 8px;
+}
+
+.bookCard {
+  max-width: 350px;
+  padding: 10px;
+}
+.bookDescription {
+  font-size: 10pt;
+}
+img.bookImage {
+  height: 300px;
+  width: auto;
+}
+
+.faqAnswer {
+  margin-left: 20px;
+  font-size: 12pt;
+  color: #bbb;
+  font-style: italic;
+}
+
+a.reference {
+  font-size: 8pt;
+  color: gray;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+div.search {
+  border: solid 1px grey;
+  border-radius: 10px;
+  background-color: #1d1d1d;
+}
+
+.tight {
+  padding: 5px;
+  margin: 0px;
+}

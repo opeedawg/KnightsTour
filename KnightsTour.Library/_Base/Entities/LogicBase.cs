@@ -825,8 +825,17 @@ namespace KnightsTour
             return DateTime.Now.AddYears(-100);
         }
         protected string GetCompleteExceptionMessage(Exception exception)
-        { 
-            return exception.ToString();
+        {
+            string exceptionMessage = string.Empty;
+
+            if(exception.InnerException != null)
+            {
+                exceptionMessage += GetCompleteExceptionMessage(exception.InnerException) + Environment.NewLine;
+            }
+
+            exceptionMessage += exception.Message;
+
+            return exceptionMessage;
         }
         #endregion Methods
     }

@@ -51,10 +51,23 @@ namespace KnightsTour.WebAPI
         #endregion
 
         #region Extended Declarations
+        public int? executingUserId = null;
         #endregion
 
         #region Extended Properties
         public string UserName { get; set; }
+        public int ExecutingUserId 
+        {
+            get
+            {
+                if (!executingUserId.HasValue)
+                {
+                    executingUserId = 0;
+                }
+
+                return executingUserId.Value;
+            }
+        }
         #endregion
 
         #region Method Overrides

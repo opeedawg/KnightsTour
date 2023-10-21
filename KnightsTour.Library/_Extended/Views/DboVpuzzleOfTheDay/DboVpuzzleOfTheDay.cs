@@ -78,7 +78,57 @@ namespace KnightsTour
         #endregion Extended Properties
 
         #region Extended Methods
-        #endregion Extended Methods
+        public string PuzzleDayFormatted
+        {
+            get
+            {
+                return PuzzleOfTheDayDate.ToString("dddd MMMM d, yyyy");
+            }
+        }
+        
+        public List<int> ColIndexes
+        {
+            get
+            { 
+                List<int> cols = new List<int>();
+                for (int i = 0; i < Cols; i++)
+                {
+                    cols.Add(i);
+                }
 
-    } // Class
+                return cols;
+            }
+        }
+        public List<int> RowIndexes
+        {
+            get
+            {
+                List<int> rows = new List<int>();
+                for (int i = 0; i < Rows; i++)
+                {
+                    rows.Add(i);
+                }
+
+                return rows;
+            }
+        }
+        public List<List<int>> PuzzleCells
+        {
+            get
+            {
+                try
+                {
+                    List<List<int>> cells = Newtonsoft.Json.JsonConvert.DeserializeObject<List<List<int>>>(PuzzlePath.Split(':')[1].Replace("}", ""));
+
+                    return cells;
+                }
+                catch(Exception e)
+                {
+                    return new List<List<int>>();
+                }
+            }
+        }
+            #endregion Extended Methods
+
+        } // Class
 } // Namespace
