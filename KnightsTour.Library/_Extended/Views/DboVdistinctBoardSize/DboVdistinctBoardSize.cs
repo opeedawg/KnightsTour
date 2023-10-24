@@ -20,12 +20,12 @@ namespace KnightsTour
     /// <remarks>
     /// Feel free to add properties as you see fit here.
     /// </remarks>
-    public class DboVdistinctBoardSize : DboVdistinctBoardSizeBase
+    public class DboVDistinctBoardSize : DboVDistinctBoardSizeBase
     {
         #region Extended Constructor(s)
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVdistinctBoardSize"/> class.
+        /// Initializes a new instance of the <see cref="DboVDistinctBoardSize"/> class.
         /// Initializes a new empty instance of the DboVdistinctBoardSize class.
         /// </summary>
         /// <example>
@@ -33,23 +33,23 @@ namespace KnightsTour
         /// DboVdistinctBoardSize dboVdistinctBoardSize = new DboVdistinctBoardSize();
         /// </code>
         /// </example>
-        public DboVdistinctBoardSize() : base()
+        public DboVDistinctBoardSize() : base()
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVdistinctBoardSize"/> class.
+        /// Initializes a new instance of the <see cref="DboVDistinctBoardSize"/> class.
         /// Initializes a new empty instance of the DboVdistinctBoardSize class from the record in a data reader.
         /// </summary>
         /// <param name="record">A record returned from a database reader.</param>
-        public DboVdistinctBoardSize(IDataRecord record) : base(record)
+        public DboVDistinctBoardSize(IDataRecord record) : base(record)
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVdistinctBoardSize"/> class.
+        /// Initializes a new instance of the <see cref="DboVDistinctBoardSize"/> class.
         /// Initializes a new empty instance of the DboVdistinctBoardSize class from a DataRow (via a <see cref="DataTable" /> usually part of a larger <see cref="DataSet" />).
         /// </summary>
         /// <param name="record">The <see cref="DataRow" />.</param>
-        public DboVdistinctBoardSize(DataRow record) : base(record)
+        public DboVDistinctBoardSize(DataRow record) : base(record)
         {
         }
         #endregion Extended Constructor(s)

@@ -4,7 +4,7 @@
  * Interface to represent the base properties and functions of the @see Solution. It is highly recommended NOT to modify this file, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided see file ISolution.ts.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 14, 2023 at 10:21:16 AM
+ * Generated on October 21, 2023 at 9:45:27 AM
  */
 
 // Imports
@@ -26,6 +26,8 @@ export interface ISolutionBase extends IBaseEntity {
   instanceLabel: string;
   /** The Member id field. [dbo.Solution.MemberId] */
   memberId: number;
+  /** The Non member IP field. [dbo.Solution.NonMemberIP] */
+  nonMemberIp: string;
   /** The Non member name field. [dbo.Solution.NonMemberName] */
   nonMemberName: string;
   /** The Note field. [dbo.Solution.Note] */

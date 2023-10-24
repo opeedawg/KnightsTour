@@ -31,6 +31,8 @@ export class Solution {
   instanceLabel: string;
   /** A reference to the FK object.  Initially null, it can be efficiently hydrated by authored method in the entity store. */
   memberByMemberId: Member | null;
+  /** The Non member IP field. [dbo.Solution.NonMemberIP] */
+  nonMemberIp: string;
   /** The Member id field. [dbo.Solution.MemberId] */
   memberId: number;
   /** The Non member name field. [dbo.Solution.NonMemberName] */
@@ -64,6 +66,7 @@ export class Solution {
       this.instanceLabel = initialSolution.instanceLabel;
       this.memberByMemberId = initialSolution.memberByMemberId;
       this.memberId = initialSolution.memberId;
+      this.nonMemberIp = initialSolution.nonMemberIp;
       this.nonMemberName = initialSolution.nonMemberName;
       this.note = initialSolution.note;
       this.path = initialSolution.path;
@@ -80,6 +83,7 @@ export class Solution {
       this.instanceLabel = '';
       this.memberByMemberId = null;
       this.memberId = 0;
+      this.nonMemberIp = '';
       this.nonMemberName = '';
       this.note = '';
       this.path = '';

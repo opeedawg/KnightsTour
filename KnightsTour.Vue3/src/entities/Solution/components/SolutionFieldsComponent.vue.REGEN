@@ -6,7 +6,7 @@
 * - Note: fields are rendered based on rules defined in the @see SolutionConfig class.
 * 
 * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
-* Generated on October 14, 2023 at 10:21:16 AM
+* Generated on October 21, 2023 at 9:45:27 AM
 -->
 
 <template>
@@ -35,6 +35,7 @@
   	   <TextField v-if="fieldsLoaded" v-bind="attr_Note"></TextField>
   	   <TextField v-if="fieldsLoaded" v-bind="attr_Code"></TextField>
   	   <TextField v-if="fieldsLoaded" v-bind="attr_NonMemberName"></TextField>
+  	   <TextField v-if="fieldsLoaded" v-bind="attr_NonMemberIp"></TextField>
     </q-card-section>
   </q-card>
   <q-card
@@ -211,6 +212,16 @@ export default {
       this.refreshAttributes;
       return this.getAttribute(this.solutionPropertyNames.memberId);
     }, // attr_MemberId
+
+    /**
+    * Computed function [attr_NonMemberIp] for variable attr_NonMemberIp: 
+    * - Assigns the attribute collection for the NonMemberIp property for field binding.
+    * @returns {any} Anything
+    */
+    attr_NonMemberIp: function attr_NonMemberIp(): any {
+      this.refreshAttributes;
+      return this.getAttribute(this.solutionPropertyNames.nonMemberIp);
+    }, // attr_NonMemberIp
 
     /**
     * Computed function [attr_NonMemberName] for variable attr_NonMemberName: 

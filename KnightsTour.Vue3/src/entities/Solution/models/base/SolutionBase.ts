@@ -4,7 +4,7 @@
  * The base class for the @see Solution entity. It is highly recommended NOT to modify this file, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided see file Solution.ts.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 14, 2023 at 10:21:16 AM
+ * Generated on October 21, 2023 at 9:45:27 AM
  */
 
 // Imports
@@ -21,6 +21,8 @@ export enum SolutionPropertyNames {
   instanceLabel = 'instanceLabel',
   /** number(optional) */
   memberId = 'memberId',
+  /** string(optional) */
+  nonMemberIp = 'nonMemberIp',
   /** string(optional) */
   nonMemberName = 'nonMemberName',
   /** string(optional) */
@@ -61,6 +63,8 @@ export abstract class SolutionBase implements ISolutionBase {
   memberByMemberId: Member | null;
   /** The Member id field. [dbo.Solution.MemberId] */
   memberId: number;
+  /** The Non member IP field. [dbo.Solution.NonMemberIP] */
+  nonMemberIp: string;
   /** The Non member name field. [dbo.Solution.NonMemberName] */
   nonMemberName: string;
   /** The Note field. [dbo.Solution.Note] */
@@ -92,6 +96,7 @@ export abstract class SolutionBase implements ISolutionBase {
       this.instanceLabel = initialSolution.instanceLabel;
       this.memberByMemberId = initialSolution.memberByMemberId;
       this.memberId = initialSolution.memberId;
+      this.nonMemberIp = initialSolution.nonMemberIp;
       this.nonMemberName = initialSolution.nonMemberName;
       this.note = initialSolution.note;
       this.path = initialSolution.path;
@@ -107,6 +112,7 @@ export abstract class SolutionBase implements ISolutionBase {
       this.instanceLabel = '';
       this.memberByMemberId = null;
       this.memberId = 0;
+      this.nonMemberIp = '';
       this.nonMemberName = '';
       this.note = '';
       this.path = '';

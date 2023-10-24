@@ -500,28 +500,14 @@ export default {
               .completeSolution(this.solution.solutionId)
               .then(function (response: DXResponse) {
                 if (response.isValid) {
-                  // let memberSolution = new Solution();
-                  // memberSolution.puzzleId = self.puzzle.puzzleId;
-                  // memberSolution.memberId = self.member.memberId;
-                  // memberSolution.solutionStartDate =
-                  //   self.solution.solutionStartDate;
-                  // memberSolution.solutionDuration =
-                  //   self.solution.solutionDuration;
-                  // memberSolution.path = self.getPathString();
-                  // memberSolution.note = self.solution.note;
-                  // memberSolution.nonMemberName = '';
-
-                  // console.log('memberSolution', memberSolution);
-
                   self.$emit('puzzleComplete', response.dataObject);
                 }
               });
           } else {
             let startDate: Date = new Date(this.solution.solutionStartDate);
             let currentDate: Date = new Date(); // Now?
-            this.solution.solutionDuration = Math.round(
-              Math.abs(startDate.getTime() - currentDate.getTime()) / 1000
-            );
+            this.solution.solutionDuration =
+              Math.abs(startDate.getTime() - currentDate.getTime()) / 1000;
 
             self.puzzle.solutionDuration = this.solution.solutionDuration;
 

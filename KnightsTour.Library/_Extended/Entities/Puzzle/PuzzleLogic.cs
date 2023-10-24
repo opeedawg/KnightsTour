@@ -128,7 +128,7 @@ namespace KnightsTour
                 DataRow result = StorageHandler.GetRecord(statement);
                 if (result != null)
                 {
-                    DboVpuzzleOfTheDay existingPuzzle = new DboVpuzzleOfTheDay(result);
+                    DboVPuzzleOfTheDay existingPuzzle = new DboVPuzzleOfTheDay(result);
                     response.Append(new Message($"Daily puzzle {existingPuzzle.PuzzleId} retrieved."));
                     existingPuzzle.MemberSolution = new SolutionLogic(UserName).GetByMemberAndPuzzle(memberId, existingPuzzle.PuzzleId);
                     response.DataObject = existingPuzzle;
@@ -175,7 +175,7 @@ namespace KnightsTour
             IActionResponse response = new ActionResponse("GetRankings");
             int topRecordCount = 10;
 
-            List<DboVsolutionRanking> allRankings = new List<DboVsolutionRanking>();
+            List<DboVSolutionRanking> allRankings = new List<DboVSolutionRanking>();
             int rank = 1;
             foreach (IDataRecord row in StorageHandler.GetRecords(new StorageStatement()
             {
@@ -183,13 +183,13 @@ namespace KnightsTour
                 Parameter = new GenericParameter("@puzzleId", puzzleId)
             }))
             {
-                DboVsolutionRanking rankingRow = new DboVsolutionRanking(row);
+                DboVSolutionRanking rankingRow = new DboVSolutionRanking(row);
                 rankingRow.Rank = rank;
                 allRankings.Add(rankingRow);
                 rank++;
             }
 
-            List<DboVsolutionRanking> rankingsToReturn = new List<DboVsolutionRanking>();
+            List<DboVSolutionRanking> rankingsToReturn = new List<DboVSolutionRanking>();
             // Return the top <topRecordCount>
             rankingsToReturn.AddRange(allRankings.Where(r => r.Rank <= topRecordCount).OrderBy(r => r.Rank));
 
@@ -197,7 +197,7 @@ namespace KnightsTour
             if(memberId > 0)
             {
                 // Do they exist at all in the list?
-                DboVsolutionRanking memberRanking = allRankings.FirstOrDefault(r => r.MemberId == memberId);
+                DboVSolutionRanking memberRanking = allRankings.FirstOrDefault(r => r.MemberId == memberId);
 
                 if (memberRanking != null)
                 {
@@ -368,7 +368,7 @@ namespace KnightsTour
                         result = StorageHandler.GetRecord(statement);
                         if (result != null)
                         {
-                            DboVpuzzleOfTheDay puzzle = new DboVpuzzleOfTheDay(result);
+                            DboVPuzzleOfTheDay puzzle = new DboVPuzzleOfTheDay(result);
                             response.Append(new Message($"Puzzle {puzzle.PuzzleId} retrieved."));
                             if (search.MemberId > 0)
                                 puzzle.MemberSolution = new SolutionLogic(UserName).GetByMemberAndPuzzle(search.MemberId, puzzle.PuzzleId);

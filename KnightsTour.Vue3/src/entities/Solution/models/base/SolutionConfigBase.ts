@@ -4,7 +4,7 @@
  * The base configuration information for the @see Solution entity. It is highly recommended NOT to modify this file, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided see file SolutionConfig.ts.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 14, 2023 at 10:21:16 AM
+ * Generated on October 21, 2023 at 9:45:27 AM
  */
 
 // Imports
@@ -21,6 +21,7 @@ export const SolutionDBFields = new Map<string, DBColumn>();
 SolutionDBFields.set(SolutionPropertyNames.code, new DBColumn(SolutionPropertyNames.code, 'Code', 'Code', QDataType.string));
 SolutionDBFields.set(SolutionPropertyNames.instanceLabel, new DBColumn(SolutionPropertyNames.instanceLabel, '', 'The derived instance label.', QDataType.string));
 SolutionDBFields.set(SolutionPropertyNames.memberId, new DBColumn(SolutionPropertyNames.memberId, 'MemberId', 'Member id', QDataType.number));
+SolutionDBFields.set(SolutionPropertyNames.nonMemberIp, new DBColumn(SolutionPropertyNames.nonMemberIp, 'NonMemberIP', 'Non member IP', QDataType.string));
 SolutionDBFields.set(SolutionPropertyNames.nonMemberName, new DBColumn(SolutionPropertyNames.nonMemberName, 'NonMemberName', 'Non member name', QDataType.string));
 SolutionDBFields.set(SolutionPropertyNames.note, new DBColumn(SolutionPropertyNames.note, 'Note', 'Note', QDataType.string));
 SolutionDBFields.set(SolutionPropertyNames.path, new DBColumn(SolutionPropertyNames.path, 'Path', 'Path', QDataType.string));
@@ -38,6 +39,9 @@ export const colInstanceLabel: QTableColumnHeaderFromDBColumn = new QTableColumn
 
 /** The Member id column that can be used in header construction. */
 export const colMemberId: QTableColumnHeaderFromDBColumn = new QTableColumnHeaderFromDBColumn(SolutionDBFields.get(SolutionPropertyNames.memberId));
+
+/** The Non member IP column that can be used in header construction. */
+export const colNonMemberIp: QTableColumnHeaderFromDBColumn = new QTableColumnHeaderFromDBColumn(SolutionDBFields.get(SolutionPropertyNames.nonMemberIp));
 
 /** The Non member name column that can be used in header construction. */
 export const colNonMemberName: QTableColumnHeaderFromDBColumn = new QTableColumnHeaderFromDBColumn(SolutionDBFields.get(SolutionPropertyNames.nonMemberName));
@@ -100,6 +104,9 @@ export const fieldConfigurationMemberId = new FieldConfigurationFromDB(SolutionD
 fieldConfigurationMemberId.maskType = FieldMaskType.Number;
 fieldConfigurationMemberId.optionFilter = 'SQL|SELECT CAST([MemberId] AS nvarchar(2000)), [DisplayName] FROM [dbo].[Member]  ORDER BY [DisplayName]';
 
+/** The detailed Non member IP field configuration used for all form displays. */
+export const fieldConfigurationNonMemberIp = new FieldConfigurationFromDB(SolutionDBFields.get(SolutionPropertyNames.nonMemberIp), MaterialDesignIcon.Abc, 'The Non member IP');
+
 /** The detailed Non member name field configuration used for all form displays. */
 export const fieldConfigurationNonMemberName = new FieldConfigurationFromDB(SolutionDBFields.get(SolutionPropertyNames.nonMemberName), MaterialDesignIcon.Abc, 'The Non member name');
 
@@ -142,6 +149,7 @@ export const fieldConfigurationsBase = new Map<string, FieldConfiguration>();
 fieldConfigurationsBase.set(SolutionPropertyNames.code, fieldConfigurationCode);
 fieldConfigurationsBase.set(SolutionPropertyNames.instanceLabel, fieldConfigurationInstanceLabel);
 fieldConfigurationsBase.set(SolutionPropertyNames.memberId, fieldConfigurationMemberId);
+fieldConfigurationsBase.set(SolutionPropertyNames.nonMemberIp, fieldConfigurationNonMemberIp);
 fieldConfigurationsBase.set(SolutionPropertyNames.nonMemberName, fieldConfigurationNonMemberName);
 fieldConfigurationsBase.set(SolutionPropertyNames.note, fieldConfigurationNote);
 fieldConfigurationsBase.set(SolutionPropertyNames.path, fieldConfigurationPath);

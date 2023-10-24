@@ -363,7 +363,7 @@ namespace KnightsTour
                 if (result != null)
                 {
                     List<string> levelNames = new List<string>() { "Beginner", "Easy", "Medium", "Hard", "Challenging" };
-                    DboVmemberStatistic statistic = new DboVmemberStatistic(result);
+                    DboVMemberStatistic statistic = new DboVMemberStatistic(result);
 
                     options.Add(new SelectOption("Sign up date", result.ValueAs<DateTime>("CreateDate").ToLongDateString()));
                     options.Add(new SelectOption("Public initials", result.ValueAs<string>("UserInitials")));

@@ -1,4 +1,4 @@
-// Genererated by DXterity8 on October 14, 2023 at 10:21:15 AM.
+// Genererated by DXterity8 on October 21, 2023 at 9:45:26 AM.
 
 using GraphQL.Types;
 

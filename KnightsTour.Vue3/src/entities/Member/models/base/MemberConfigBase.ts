@@ -4,7 +4,7 @@
  * The base configuration information for the @see Member entity. It is highly recommended NOT to modify this file, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided see file MemberConfig.ts.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 14, 2023 at 10:21:15 AM
+ * Generated on October 21, 2023 at 9:45:27 AM
  */
 
 // Imports

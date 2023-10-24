@@ -4,7 +4,7 @@
  * The class that represents the view model for DB view dbo.V_PuzzleOfTheDaySolution.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 14, 2023 at 10:21:16 AM
+ * Generated on October 21, 2023 at 9:45:27 AM
  */
 
 // Imports

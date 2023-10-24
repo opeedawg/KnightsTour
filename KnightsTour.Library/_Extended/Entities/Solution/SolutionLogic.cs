@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 
 namespace KnightsTour
 {
@@ -103,7 +104,7 @@ namespace KnightsTour
             // Return the response.
             return response;
         }
-        public DboVpuzzleOfTheDaySolution GetByMemberAndPuzzle(int memberId, int puzzleId)
+        public DboVPuzzleOfTheDaySolution GetByMemberAndPuzzle(int memberId, int puzzleId)
         {
             var result = StorageHandler.GetRecord(new StorageStatement()
             {
@@ -114,9 +115,9 @@ namespace KnightsTour
                 }
             });
 
-            DboVpuzzleOfTheDaySolution memberSolution = null;
+            DboVPuzzleOfTheDaySolution memberSolution = null;
             if (result != null)
-                memberSolution = new DboVpuzzleOfTheDaySolution(result);
+                memberSolution = new DboVPuzzleOfTheDaySolution(result);
 
             return memberSolution;
         }
@@ -195,13 +196,13 @@ namespace KnightsTour
                     if (response.IsValid)
                     {
                         response.Messages.Clear();
-                        response.Append(new Message($"You won!  You completed the puzzle in {solutionDuration} seconds, well done!"));
+                        response.Append(new Message($"You won!  You completed the puzzle in {solutionDuration} seconds. Well done!"));
                     }
 
                     response.DataObject = null;
                 }
                 else
-                    response.Append(new Exception("Invalid solution"));
+                    response.Append(new Exception("Opps, something went wrong.  This seems to not be a valid solution."));
             }
             catch (Exception exception)
             {
@@ -220,14 +221,29 @@ namespace KnightsTour
             IActionResponse response = new ActionResponse("InsertNonMemberSolution");
             try
             {
-                solution.Code = Guid.NewGuid().ToString();
-                solution.MemberId = null;
-
                 if (string.IsNullOrEmpty(solution.NonMemberName))
                     response.Append(new Exception("For non-member solutions, a temporary display name is required."));
 
                 if (response.IsValid)
-                    response.Append(Insert(solution.ToFull()));
+                {
+                    // Test if an existing solution record exists for this IP and member name.
+                    Solution existingSolution = GetExistingNonMemberSolution(solution, request);
+
+                    if (existingSolution != null)
+                    {
+                        response.Append(new Message("An existing solution was found for this puzzle, your previous time record was retrieved.", CoreLibrary.Enumerations.MessageType.Warning));
+                        response.Append(new Message($"You won!  This puzzle was completed before though, your best time is still {solution.SolutionDuration} seconds. Well done!"));
+                        solution = existingSolution.ToLite();
+                    }
+                    else
+                    {
+                        solution.Code = Guid.NewGuid().ToString();
+                        solution.MemberId = null;
+                        solution.NonMemberIp = GetIpAddress(request);
+                        response.Append(Insert(solution.ToFull()));
+                        response.Append(new Message($"You won!  You completed the puzzle in {solution.SolutionDuration} seconds. Well done!"));
+                    }
+                }
             }
             catch (Exception exception)
             {
@@ -240,6 +256,27 @@ namespace KnightsTour
                 response.DataObject = solution.Code;
 
             return response;
+        }
+        Solution GetExistingNonMemberSolution(SolutionLite solution, HttpRequest request)
+        {
+            var result = StorageHandler.GetRecord(new StorageStatement()
+            {
+                Statement = "SELECT * FROM [Solution] WHERE NonMemberName = @nonMemberName AND NonMemberIP = @nonMemberIp AND PuzzleId = @puzzleId;",
+                Parameters = new List<IParameter>() {
+                    new GenericParameter("@nonMemberName", solution.NonMemberName),
+                    new GenericParameter("@nonMemberIp", GetIpAddress(request)),
+                    new GenericParameter("@puzzleId", solution.PuzzleId.Value)
+                }
+            });
+
+            if (result == null)
+                return null;
+
+            return new Solution(result);
+        }
+        static string GetIpAddress(HttpRequest request)
+        {
+            return request.HttpContext.Connection.RemoteIpAddress.ToString();
         }
         #endregion Extended Methods
 

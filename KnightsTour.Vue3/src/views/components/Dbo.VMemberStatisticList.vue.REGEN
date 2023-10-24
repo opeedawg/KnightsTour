@@ -1,0 +1,382 @@
+<!--
+* Component: Dbo.VMemberStatisticList
+* Location:  src\views\components\
+* 
+* The class that represents a compoenent to retrieve and list data from view dbo.V_MemberStatistics.
+* 
+* @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
+* Generated on October 21, 2023 at 9:45:27 AM
+-->
+
+<template>
+  <!-- Loading icon -->
+  <div class="q-pa-xl row justify-center" v-if="!loaded">
+    <q-spinner color="green" size="5em" :thickness="10" />
+  </div>
+
+  <div class="q-pa-md" v-if="loaded">
+    <q-table
+      title="Dbo. v member statistic"
+      row-key="MemberId"
+      :class="{hiddenHeader: !showHeader }"
+      :columns="columns"
+      :rows="rows"
+      :filter="searchFilter"
+    >
+      <template v-slot:top-right>
+        <q-input
+          dense
+          debounce="300"
+          v-model="searchFilter"
+          placeholder="Search"
+          input-class="tableSearch"
+        >
+          <template v-slot:append>
+            <q-icon name="search" color="white" />
+          </template>
+        </q-input>
+      </template>
+    </q-table>
+  </div>
+</template>
+<script lang="ts">
+  /** Imports: Required classes, components, controls etc. for this component. */
+  import { BaseStore } from 'src/common/stores/base.store';
+  import { Dbo.VMemberStatistic } from 'src/views/models/extended/Dbo.VMemberStatistic';
+  import { DXEntityFilter, DXResponse } from 'src/common/models/dxterity';
+  import { ref } from 'vue';
+  import { UtilityInstance } from 'src/common/models/global';
+  import { ViewEnum } from '../viewEnum';
+
+
+/** The definition of the columns, feel free to rearrange add or remove as required. */
+const columns = [
+  {
+    name: 'MemberId',
+    required: true,
+    label: 'Member id',
+    field: (row: Dbo.VMemberStatistic) => row.memberId,
+    sortable: true,
+  },
+  {
+    name: 'CreateDate',
+    required: false,
+    label: 'Create date',
+    field: (row: Dbo.VMemberStatistic) => row.createDate,
+    sortable: true,
+  },
+  {
+    name: 'UserInitials',
+    required: false,
+    label: 'User initial',
+    field: (row: Dbo.VMemberStatistic) => row.userInitials,
+    sortable: true,
+  },
+  {
+    name: 'TotalLogins',
+    required: false,
+    label: 'Total login',
+    field: (row: Dbo.VMemberStatistic) => row.totalLogins,
+    sortable: true,
+  },
+  {
+    name: 'TotalAttempted',
+    required: false,
+    label: 'Total attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalAttempted,
+    sortable: true,
+  },
+  {
+    name: 'TotalCompleted',
+    required: false,
+    label: 'Total completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalCompleted,
+    sortable: true,
+  },
+  {
+    name: 'TotalDailyAttempted',
+    required: false,
+    label: 'Total daily attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalDailyAttempted,
+    sortable: true,
+  },
+  {
+    name: 'TotalDailyCompleted',
+    required: false,
+    label: 'Total daily completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalDailyCompleted,
+    sortable: true,
+  },
+  {
+    name: 'FastestBeginnerTime',
+    required: false,
+    label: 'Fastest beginner time',
+    field: (row: Dbo.VMemberStatistic) => row.fastestBeginnerTime,
+    sortable: true,
+  },
+  {
+    name: 'LongestBeginnerTime',
+    required: false,
+    label: 'Longest beginner time',
+    field: (row: Dbo.VMemberStatistic) => row.longestBeginnerTime,
+    sortable: true,
+  },
+  {
+    name: 'AverageBeginnerTime',
+    required: false,
+    label: 'Average beginner time',
+    field: (row: Dbo.VMemberStatistic) => row.averageBeginnerTime,
+    sortable: true,
+  },
+  {
+    name: 'TotalBeginnerCompleted',
+    required: false,
+    label: 'Total beginner completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalBeginnerCompleted,
+    sortable: true,
+  },
+  {
+    name: 'TotalBeginnerAttempted',
+    required: false,
+    label: 'Total beginner attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalBeginnerAttempted,
+    sortable: true,
+  },
+  {
+    name: 'FastestEasyTime',
+    required: false,
+    label: 'Fastest easy time',
+    field: (row: Dbo.VMemberStatistic) => row.fastestEasyTime,
+    sortable: true,
+  },
+  {
+    name: 'LongestEasyTime',
+    required: false,
+    label: 'Longest easy time',
+    field: (row: Dbo.VMemberStatistic) => row.longestEasyTime,
+    sortable: true,
+  },
+  {
+    name: 'AverageEasyTime',
+    required: false,
+    label: 'Average easy time',
+    field: (row: Dbo.VMemberStatistic) => row.averageEasyTime,
+    sortable: true,
+  },
+  {
+    name: 'TotalEasyCompleted',
+    required: false,
+    label: 'Total easy completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalEasyCompleted,
+    sortable: true,
+  },
+  {
+    name: 'TotalEasyAttempted',
+    required: false,
+    label: 'Total easy attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalEasyAttempted,
+    sortable: true,
+  },
+  {
+    name: 'FastestMediumTime',
+    required: false,
+    label: 'Fastest medium time',
+    field: (row: Dbo.VMemberStatistic) => row.fastestMediumTime,
+    sortable: true,
+  },
+  {
+    name: 'LongestMediumTime',
+    required: false,
+    label: 'Longest medium time',
+    field: (row: Dbo.VMemberStatistic) => row.longestMediumTime,
+    sortable: true,
+  },
+  {
+    name: 'AverageMediumTime',
+    required: false,
+    label: 'Average medium time',
+    field: (row: Dbo.VMemberStatistic) => row.averageMediumTime,
+    sortable: true,
+  },
+  {
+    name: 'TotalMediumCompleted',
+    required: false,
+    label: 'Total medium completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalMediumCompleted,
+    sortable: true,
+  },
+  {
+    name: 'TotalMediumAttempted',
+    required: false,
+    label: 'Total medium attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalMediumAttempted,
+    sortable: true,
+  },
+  {
+    name: 'FastestHardTime',
+    required: false,
+    label: 'Fastest hard time',
+    field: (row: Dbo.VMemberStatistic) => row.fastestHardTime,
+    sortable: true,
+  },
+  {
+    name: 'LongestHardTime',
+    required: false,
+    label: 'Longest hard time',
+    field: (row: Dbo.VMemberStatistic) => row.longestHardTime,
+    sortable: true,
+  },
+  {
+    name: 'AverageHardTime',
+    required: false,
+    label: 'Average hard time',
+    field: (row: Dbo.VMemberStatistic) => row.averageHardTime,
+    sortable: true,
+  },
+  {
+    name: 'TotalHardCompleted',
+    required: false,
+    label: 'Total hard completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalHardCompleted,
+    sortable: true,
+  },
+  {
+    name: 'TotalHardAttempted',
+    required: false,
+    label: 'Total hard attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalHardAttempted,
+    sortable: true,
+  },
+  {
+    name: 'FastestChallengingTime',
+    required: false,
+    label: 'Fastest challenging time',
+    field: (row: Dbo.VMemberStatistic) => row.fastestChallengingTime,
+    sortable: true,
+  },
+  {
+    name: 'LongestChallengingTime',
+    required: false,
+    label: 'Longest challenging time',
+    field: (row: Dbo.VMemberStatistic) => row.longestChallengingTime,
+    sortable: true,
+  },
+  {
+    name: 'AverageChallengingTime',
+    required: false,
+    label: 'Average challenging time',
+    field: (row: Dbo.VMemberStatistic) => row.averageChallengingTime,
+    sortable: true,
+  },
+  {
+    name: 'TotalChallengingCompleted',
+    required: false,
+    label: 'Total challenging completed',
+    field: (row: Dbo.VMemberStatistic) => row.totalChallengingCompleted,
+    sortable: true,
+  },
+  {
+    name: 'TotalChallengingAttempted',
+    required: false,
+    label: 'Total challenging attempted',
+    field: (row: Dbo.VMemberStatistic) => row.totalChallengingAttempted,
+    sortable: true,
+  },
+];
+
+/** The definition of the rows element to be bound to the table. */
+const rows = [] as Dbo.VMemberStatistic[];
+/** Component: Dbo.VMemberStatisticList
+* - The class that represents a compoenent to retrieve and list data from view dbo.V_MemberStatistics.
+*/
+export default {
+  Name: 'Dbo.VMemberStatisticList',
+  /** https://vuejs.org/guide/components/props.html */
+  props: {
+    /** The filter to apply to the data retrieval, if not provided all data will be returned. */
+    filter: {
+      type: DXEntityFilter,
+      required: false,
+    },
+    /** Should the header of the table be displayed or not. */
+    showHeader: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+  },
+  /** https://vuejs.org/api/composition-api-setup.html */
+  setup() {
+    let searchFilter = ref('');
+
+    return {
+      searchFilter,
+      columns,
+      rows,
+    }
+  },
+  /** https://vuejs.org/api/options-state.html */
+  data: function () {
+    return {
+      /** The reference to the generic base store which provides the access to all the view data retrieval. */
+      baseStore: new BaseStore(),
+      /** The current load step. */
+      loadStep: 0,
+      /** The number of steps required to load this component, if you add more increase this and increment as required. */
+      totalSteps: 1,
+    };
+  },
+  /** https://vuejs.org/guide/essentials/computed.html */
+  computed: {
+    /**
+    * Computed function [loaded] for variable loaded: 
+    * - Determines with the data for this component has been loaded.
+    * @returns {boolean} TRUE if loaded.
+    */
+    loaded: function loaded(): boolean {
+      return this.loadStep >= this.totalSteps;
+    }, // loaded
+
+  },
+  /** https://programeasily.com/2021/05/16/lifecycle-hooks-in-vue-3/ */
+  mounted: function () {
+    // A required reference to this component for sub references.
+    let self = this;
+
+    // Set a default pagination and sort filter if none is passed.
+
+    let listFilter: DXEntityFilter = new DXEntityFilter(
+      0,
+      10,
+      'MemberId'
+    );
+
+    // If a filter has been passed, then use that instead.
+    if (this.filter) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      listFilter = this.filter;
+    }
+
+    this.$emit('loading');
+    // Retrieve the data from the view based on this filter.
+    this.baseStore
+      .getView(ViewEnum.DboVMemberStatistics, listFilter, true)
+      .then(function (response: DXResponse) {
+        if (response.isValid) {
+          self.rows = [];
+          self.rows.splice(
+          0,
+          response.dataObject.length,
+          ...response.dataObject
+        );
+        self.$emit('loaded', true);
+      } else {
+        UtilityInstance.toastResponse(response);
+        self.$emit('loaded', false);
+      }
+
+      self.loadStep++;
+    });
+  },
+};
+</script>

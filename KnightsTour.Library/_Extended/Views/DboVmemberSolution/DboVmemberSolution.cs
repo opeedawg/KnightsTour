@@ -20,12 +20,12 @@ namespace KnightsTour
     /// <remarks>
     /// Feel free to add properties as you see fit here.
     /// </remarks>
-    public class DboVmemberSolution : DboVmemberSolutionBase
+    public class DboVMemberSolution : DboVMemberSolutionBase
     {
         #region Extended Constructor(s)
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVmemberSolution"/> class.
+        /// Initializes a new instance of the <see cref="DboVMemberSolution"/> class.
         /// Initializes a new empty instance of the DboVmemberSolution class.
         /// </summary>
         /// <example>
@@ -33,23 +33,23 @@ namespace KnightsTour
         /// DboVmemberSolution dboVmemberSolution = new DboVmemberSolution();
         /// </code>
         /// </example>
-        public DboVmemberSolution() : base()
+        public DboVMemberSolution() : base()
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVmemberSolution"/> class.
+        /// Initializes a new instance of the <see cref="DboVMemberSolution"/> class.
         /// Initializes a new empty instance of the DboVmemberSolution class from the record in a data reader.
         /// </summary>
         /// <param name="record">A record returned from a database reader.</param>
-        public DboVmemberSolution(IDataRecord record) : base(record)
+        public DboVMemberSolution(IDataRecord record) : base(record)
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVmemberSolution"/> class.
+        /// Initializes a new instance of the <see cref="DboVMemberSolution"/> class.
         /// Initializes a new empty instance of the DboVmemberSolution class from a DataRow (via a <see cref="DataTable" /> usually part of a larger <see cref="DataSet" />).
         /// </summary>
         /// <param name="record">The <see cref="DataRow" />.</param>
-        public DboVmemberSolution(DataRow record) : base(record)
+        public DboVMemberSolution(DataRow record) : base(record)
         {
         }
         #endregion Extended Constructor(s)

@@ -20,12 +20,12 @@ namespace KnightsTour
     /// <remarks>
     /// Feel free to add properties as you see fit here.
     /// </remarks>
-    public class DboVmemberStatistic : DboVmemberStatisticBase
+    public class DboVMemberStatistic : DboVMemberStatisticBase
     {
         #region Extended Constructor(s)
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVmemberStatistic"/> class.
+        /// Initializes a new instance of the <see cref="DboVMemberStatistic"/> class.
         /// Initializes a new empty instance of the DboVmemberStatistic class.
         /// </summary>
         /// <example>
@@ -33,23 +33,23 @@ namespace KnightsTour
         /// DboVmemberStatistic dboVmemberStatistic = new DboVmemberStatistic();
         /// </code>
         /// </example>
-        public DboVmemberStatistic() : base()
+        public DboVMemberStatistic() : base()
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVmemberStatistic"/> class.
+        /// Initializes a new instance of the <see cref="DboVMemberStatistic"/> class.
         /// Initializes a new empty instance of the DboVmemberStatistic class from the record in a data reader.
         /// </summary>
         /// <param name="record">A record returned from a database reader.</param>
-        public DboVmemberStatistic(IDataRecord record) : base(record)
+        public DboVMemberStatistic(IDataRecord record) : base(record)
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVmemberStatistic"/> class.
+        /// Initializes a new instance of the <see cref="DboVMemberStatistic"/> class.
         /// Initializes a new empty instance of the DboVmemberStatistic class from a DataRow (via a <see cref="DataTable" /> usually part of a larger <see cref="DataSet" />).
         /// </summary>
         /// <param name="record">The <see cref="DataRow" />.</param>
-        public DboVmemberStatistic(DataRow record) : base(record)
+        public DboVMemberStatistic(DataRow record) : base(record)
         {
         }
         #endregion Extended Constructor(s)

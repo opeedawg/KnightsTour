@@ -20,12 +20,12 @@ namespace KnightsTour
     /// <remarks>
     /// Feel free to add properties as you see fit here.
     /// </remarks>
-    public class DboVsolutionRanking : DboVsolutionRankingBase
+    public class DboVSolutionRanking : DboVSolutionRankingBase
     {
         #region Extended Constructor(s)
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVsolutionRanking"/> class.
+        /// Initializes a new instance of the <see cref="DboVSolutionRanking"/> class.
         /// Initializes a new empty instance of the DboVsolutionRanking class.
         /// </summary>
         /// <example>
@@ -33,23 +33,23 @@ namespace KnightsTour
         /// DboVsolutionRanking dboVsolutionRanking = new DboVsolutionRanking();
         /// </code>
         /// </example>
-        public DboVsolutionRanking() : base()
+        public DboVSolutionRanking() : base()
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVsolutionRanking"/> class.
+        /// Initializes a new instance of the <see cref="DboVSolutionRanking"/> class.
         /// Initializes a new empty instance of the DboVsolutionRanking class from the record in a data reader.
         /// </summary>
         /// <param name="record">A record returned from a database reader.</param>
-        public DboVsolutionRanking(IDataRecord record) : base(record)
+        public DboVSolutionRanking(IDataRecord record) : base(record)
         {
         }
         /// <summary>
-        /// Initializes a new instance of the <see cref="DboVsolutionRanking"/> class.
+        /// Initializes a new instance of the <see cref="DboVSolutionRanking"/> class.
         /// Initializes a new empty instance of the DboVsolutionRanking class from a DataRow (via a <see cref="DataTable" /> usually part of a larger <see cref="DataSet" />).
         /// </summary>
         /// <param name="record">The <see cref="DataRow" />.</param>
-        public DboVsolutionRanking(DataRow record) : base(record)
+        public DboVSolutionRanking(DataRow record) : base(record)
         {
         }
         #endregion Extended Constructor(s)
