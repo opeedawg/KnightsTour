@@ -265,6 +265,7 @@ export default {
       refreshUI: 0,
       puzzleDuration: '',
       tab: ref('notes'),
+      timerRefreshId: 0,
     };
   },
   setup(props) {
@@ -291,11 +292,8 @@ export default {
 
     // This will be true if first load of a new puzzle!
     if (currentSolution == null) {
-      console.log('here');
       currentSolution = JSON.parse(JSON.stringify(props.puzzleInput));
-      console.log('currentSolution', currentSolution);
     }
-    console.log('puzzle.value.puzzleCells', puzzle.value.puzzleCells);
     // If logged in, track this puzzle.
     if (member.value.memberId > 0) {
       api
@@ -351,7 +349,10 @@ export default {
   },
   created() {
     this.utilityInstance.ReloadScreen();
-    setInterval(this.updatePuzzleDuration, 1000);
+    if (this.timerRefreshId == 0) {
+      let id = setInterval(this.updatePuzzleDuration, 1000);
+      this.timerRefreshId = parseInt(id.toString());
+    }
     this.updatePuzzleDuration();
   },
   methods: {
@@ -495,12 +496,13 @@ export default {
       ) {
         if (this.isValidSolution()) {
           if (this.member.memberId > 0 && this.solution.solutionId > 0) {
-            console.log('valid solution, member!');
             this.api
               .completeSolution(this.solution.solutionId)
               .then(function (response: DXResponse) {
+                UtilityInstance.toastResponse(response);
                 if (response.isValid) {
                   self.$emit('puzzleComplete', response.dataObject);
+                  clearInterval(self.timerRefreshId);
                 }
               });
           } else {
@@ -524,15 +526,16 @@ export default {
             this.api
               .insertNonMemberSolution(nonMemberSolution)
               .then(function (response: DXResponse) {
-                console.log('response', response);
+                UtilityInstance.toastResponse(response);
                 if (response.isValid) {
                   self.$emit('puzzleComplete', response.dataObject);
-                } else UtilityInstance.toastResponse(response);
+                  clearInterval(self.timerRefreshId);
+                }
               });
           }
         } else {
           UtilityInstance.toast(
-            'This is not a valid solution to this knights tour - there are squares that are not connected.',
+            'This is not a valid solution to this knights tour - keep trying - you will get it!',
             ToastType.Negative,
             ToastPositionType.Center,
             true

@@ -467,6 +467,71 @@ namespace WebAPI.RestControllers
             }
         }
 
+        #region Puzzle related
+        [Route("getPuzzle/{code}")]
+        [HttpGet]
+        public async Task<IActionResult> GetPuzzle(string code)
+        {
+            return await ExecuteCommonAsync(_GetPuzzle, new dynamic[] { code });
+        }
+        private IActionResult _GetPuzzle(dynamic[] arguments)
+        {
+            WebApiCallLog callLog = (WebApiCallLog)arguments[0];
+
+            if (callLog.IsAuthorized())
+            {
+                IActionResponse response = new ActionResponse("GetPuzzle");
+                try
+                {
+                    string code = callLog.Arguments[0];
+                    response.Append(new PuzzleLogic(callLog.UserName).GetPuzzleByCode(code, this.Request));
+                }
+                catch (Exception exception)
+                {
+                    response.Append(exception);
+                }
+
+                return ValidateResponseObject(response);
+            }
+            else
+            {
+                return ProcessExceptions(callLog);
+            }
+        }
+
+
+        #region Puzzle related
+        [Route("getSolution/{code}")]
+        [HttpGet]
+        public async Task<IActionResult> GetSolution(string code)
+        {
+            return await ExecuteCommonAsync(_GetSolution, new dynamic[] { code });
+        }
+        private IActionResult _GetSolution(dynamic[] arguments)
+        {
+            WebApiCallLog callLog = (WebApiCallLog)arguments[0];
+
+            if (callLog.IsAuthorized())
+            {
+                IActionResponse response = new ActionResponse("GetSolution");
+                try
+                {
+                    string code = callLog.Arguments[0];
+                    response.Append(new SolutionLogic(callLog.UserName).GetSolutionByCode(code, this.Request));
+                }
+                catch (Exception exception)
+                {
+                    response.Append(exception);
+                }
+
+                return ValidateResponseObject(response);
+            }
+            else
+            {
+                return ProcessExceptions(callLog);
+            }
+        }
+
         [Route("getPuzzleRankings")]
         [HttpPost]
         public async Task<IActionResult> GetPuzzleRankings([FromBody] PuzzleRankingQuery solution)

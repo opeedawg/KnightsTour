@@ -168,6 +168,18 @@ export class ApiService {
     return result.data;
   }
 
+  async getPuzzle(code: string): Promise<DXResponse> {
+    const result = await api.get(this.restPath + 'getPuzzle/' + code);
+
+    return result.data;
+  }
+
+  async getSolution(code: string): Promise<DXResponse> {
+    const result = await api.get(this.restPath + 'getSolution/' + code);
+
+    return result.data;
+  }
+
   async getMemberStatistics(memberId: number): Promise<DXResponse> {
     const result = await api.get(
       this.restPath + 'getMemberStatistics/' + memberId

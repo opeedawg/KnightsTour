@@ -114,6 +114,37 @@ namespace KnightsTour
             // Return the response.
             return response;
         }
+        public IActionResponse GetPuzzleByCode(string solutionCode, HttpRequest request)
+        {
+            IActionResponse response = new ActionResponse($"Getting puzzle for solution {solutionCode}.");
+            try
+            {
+                IStorageStatement statement = new StorageStatement()
+                {
+                    Statement = "SELECT * FROM V_PuzzleOfTheDay WHERE PuzzleId = (SELECT PuzzleId FROM Solution WHERE Code = @solutionCode)",
+                    Parameter = new GenericParameter("@solutionCode", solutionCode)
+                };
+
+                DataRow result = StorageHandler.GetRecord(statement);
+                if (result != null)
+                {
+                    DboVPuzzleOfTheDay existingPuzzle = new DboVPuzzleOfTheDay(result);
+                    response.Append(new Message($"Daily puzzle {existingPuzzle.PuzzleId} retrieved."));
+                    response.DataObject = existingPuzzle;
+                }
+                else
+                {
+                    response.Append(new Message($"Oh no!  We are unable to retrieve this solution!  Non-member solutions are only kept for 7 days."));
+                }
+            }
+            catch (Exception exception)
+            {
+                response.Append(exception);
+                EventHistoryLogic.Add(Enumerations.EventType.Exception, $"{{function: \"PuzzleLogic.GetPuzzleByCode\", exception: \"{exception.Message}\"}}", request);
+            }
+
+            return response;
+        }
         public IActionResponse GetDailyPuzzle(int memberId, HttpRequest request)
         {
             IActionResponse response = new ActionResponse("Getting daily puzzle.");

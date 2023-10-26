@@ -231,8 +231,7 @@ namespace KnightsTour
 
                     if (existingSolution != null)
                     {
-                        response.Append(new Message("An existing solution was found for this puzzle, your previous time record was retrieved.", CoreLibrary.Enumerations.MessageType.Warning));
-                        response.Append(new Message($"You won!  This puzzle was completed before though, your best time is still {solution.SolutionDuration} seconds. Well done!"));
+                        response.Append(new Message($"You won again!  You have previously completed this particular knight`s tour puzzle so your best time remains {existingSolution.SolutionDuration} seconds.", CoreLibrary.Enumerations.MessageType.Warning));
                         solution = existingSolution.ToLite();
                     }
                     else
@@ -273,6 +272,33 @@ namespace KnightsTour
                 return null;
 
             return new Solution(result);
+        }
+        public IActionResponse GetSolutionByCode(string code, HttpRequest request)
+        {
+            IActionResponse response = new ActionResponse($"GetSolutionByCode ({code})");
+            try
+            {
+                var result = StorageHandler.GetRecord(new StorageStatement()
+                {
+                    Statement = "SELECT * FROM [Solution] WHERE Code = @code;",
+                    Parameters = new List<IParameter>() {
+                        new GenericParameter("@code", code),
+                    }
+                });
+
+                if (result != null)
+                {
+                    response.DataObject = new Solution(result).ToLite();
+                }
+            }
+            catch (Exception exception)
+            {
+                response.Append(exception);
+                EventHistoryLogic.Add(Enumerations.EventType.Exception, $"{{function: \"SolutionLogic.GetSolutionByCode({code})\", exception: \"{GetCompleteExceptionMessage(exception)}\"}}", request);
+            }
+
+
+            return response;
         }
         static string GetIpAddress(HttpRequest request)
         {

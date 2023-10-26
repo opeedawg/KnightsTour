@@ -151,7 +151,6 @@ import { DboVSolutionRanking } from 'src/models/views/DboVSolutionRanking';
 import { ToastType } from 'src/models/Support/quasar';
 import DifficultyLevelControl from 'src/controls/DifficultyLevelControl.vue';
 import NameRequiredModal from 'src/modals/NameRequiredModal.vue';
-import { Solution } from 'src/models/Solution';
 
 export default {
   Name: 'PlayNow',
@@ -281,7 +280,6 @@ export default {
             self.puzzleLoaded = true;
             self.puzzleId = self.puzzle.puzzleCode;
             self.searchVisible = false;
-            console.log('self.puzzle', self.puzzle);
           } else {
             self.utilityInstance.toastResponse(response);
           }
@@ -289,11 +287,8 @@ export default {
 
       // Do search
     },
-    tourCompleted: function (solution: Solution) {
-      console.log('Playnow Solution', solution);
-
+    tourCompleted: function (solutionCode: string) {
       // Do something?
-      console.log('completed solution', solution);
       UtilityInstance.toast(
         'You did it!',
         ToastType.Positive,
