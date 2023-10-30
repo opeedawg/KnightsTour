@@ -134,7 +134,7 @@ namespace KnightsTour
                 }
                 else
                 {
-                    response.Append(new Message($"Oh no!  We are unable to retrieve this solution!  Non-member solutions are only kept for 7 days."));
+                    response.Append(new Exception($"Oh no!  We are unable to retrieve this solution!  Non-member solutions are only kept for 7 days."));
                 }
             }
             catch (Exception exception)

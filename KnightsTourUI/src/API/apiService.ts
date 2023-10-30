@@ -174,8 +174,8 @@ export class ApiService {
     return result.data;
   }
 
-  async getSolution(code: string): Promise<DXResponse> {
-    const result = await api.get(this.restPath + 'getSolution/' + code);
+  async getShareSolution(code: string): Promise<DXResponse> {
+    const result = await api.get(this.restPath + 'getShareSolution/' + code);
 
     return result.data;
   }

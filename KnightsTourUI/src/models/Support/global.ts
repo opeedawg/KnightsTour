@@ -29,6 +29,7 @@ export enum ScreenRoute {
   Logout = 'Logout',
   ChangePassword = 'ChangePassword',
   MemberStatistics = 'MemberStatistics',
+  ShareSolution = 'Share',
 }
 
 export class MenuItem {

@@ -4,7 +4,7 @@
  * The base configuration information for the @see Puzzle entity. It is highly recommended NOT to modify this file, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided see file PuzzleConfig.ts.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:27 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 // Imports

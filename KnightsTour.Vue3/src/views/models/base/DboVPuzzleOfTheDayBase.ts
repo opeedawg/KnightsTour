@@ -1,10 +1,10 @@
 /**
- * File:     Dbo.VPuzzleOfTheDayBase.ts
+ * File:     DboVPuzzleOfTheDayBase.ts
  * Location: src\views\models\base\
  * The class that represents the view model for DB view dbo.V_PuzzleOfTheDay.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:27 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 // Imports
@@ -12,13 +12,13 @@ import { v4 as guid } from 'uuid';
 import moment from 'moment';
 
 /**
-* Abstract Class: Dbo.VPuzzleOfTheDayBase
+* Abstract Class: DboVPuzzleOfTheDayBase
 *
-* Base class to define the @see Dbo.VPuzzleOfTheDayBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see Dbo.VPuzzleOfTheDayBase.
+* Base class to define the @see DboVPuzzleOfTheDayBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see DboVPuzzleOfTheDayBase.
 *
-* @implements {constructor} The constructor for the @see Dbo.VPuzzleOfTheDayBase class
+* @implements {constructor} The constructor for the @see DboVPuzzleOfTheDayBase class
 */
-export abstract class Dbo.VPuzzleOfTheDayBase {
+export abstract class DboVPuzzleOfTheDayBase {
   // *** Declarations ***
   /** The dbo.V_PuzzleOfTheDay Author field. */
   author: string;
@@ -47,7 +47,7 @@ export abstract class Dbo.VPuzzleOfTheDayBase {
 
   /**
   * Function [constructor]: 
-  * The constructor for the @see Dbo.VPuzzleOfTheDayBase class
+  * The constructor for the @see DboVPuzzleOfTheDayBase class
   */
   constructor() {
       this.author = '';

@@ -4,7 +4,7 @@
  * The project settings that stay in sync with the DXterity model.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:27 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 // Imports
@@ -83,7 +83,7 @@ export abstract class ProjectSettingsBase {
   insertButtonText: string;
   /** The text color to render on all insert buttons: White */
   insertButtonTextColor: SystemColor;
-  /** The last time this settings file was synced with the DXterity model: October 21, 2023 9:45:27 AM */
+  /** The last time this settings file was synced with the DXterity model: October 26, 2023 9:31:47 AM */
   lastUpdated: Date;
   /** The action name when performing the list function on an entity: list */
   listActionName: string;
@@ -179,7 +179,7 @@ export abstract class ProjectSettingsBase {
     this.insertButtonIcon = MaterialDesignIcon.Add;
     this.insertButtonText = 'Insert ';
     this.insertButtonTextColor = SystemColor.White;
-    this.lastUpdated = new Date('2023-10-21T09:45:27');
+    this.lastUpdated = new Date('2023-10-26T09:31:47');
     this.listActionName = 'list';
     this.listButtonBackgroundColor = SystemColor.Yellow;
     this.listButtonIcon = MaterialDesignIcon.FormatListBulleted;

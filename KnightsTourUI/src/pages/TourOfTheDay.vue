@@ -704,6 +704,7 @@ export default {
         this.newModalVisible = true;
       } else if (this.puzzle.memberSolution.solutionDuration == 0) {
         this.existingModalVisible = showWarningModal;
+        console.log('this.puzzle.memberSolution', this.puzzle.memberSolution);
         this.loadInputValues(this.puzzle.memberSolution.memberCells);
         this.notes = this.puzzle.memberSolution.note;
         this.updateHelpData();

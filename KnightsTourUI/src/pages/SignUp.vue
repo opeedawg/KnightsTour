@@ -104,6 +104,7 @@
                 <li>Compare your skills against other members!</li>
                 <li>Participate in the daily tour challenge!</li>
                 <li>Track your overall statistics!</li>
+                <li>Your completed shared solutions are available forever!</li>
               </ul>
             </p>
           </q-card-section>

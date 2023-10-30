@@ -3,8 +3,12 @@
     <div class="q-pa-xl row justify-center" v-if="!loaded">
       <q-spinner color="green" size="10em" :thickness="10" />
     </div>
-    <div v-if="loaded">
-      <h3 class="center">Joe completed this Knights Tour in 123.23 seconds!</h3>
+    <div v-if="loaded && errorMessage.length == 0">
+      <p class="center success">
+        <strong>{{ shareSolution.memberName }}</strong> completed this Knights
+        Tour in <strong>{{ shareSolution.solutionDuration }}</strong> seconds on
+        {{ shareSolution.startDateFormatted }}
+      </p>
       <table class="puzzleBoard" v-if="loaded">
         <tr class="puzzleRow" v-for="row in puzzle.rowIndexes" v-bind:key="row">
           <td
@@ -17,9 +21,14 @@
             }"
             v-bind:key="col"
             clickable
-          ></td>
+          >
+            <span v-if="puzzle.puzzleCells[row][col] > 0" class="puzzleHint">{{
+              puzzle.puzzleCells[row][col]
+            }}</span>
+          </td>
         </tr>
       </table>
+
       <div class="center" style="width: 650px; text-align: left">
         <ul>
           <li>
@@ -44,6 +53,12 @@
           </li>
         </ul>
       </div>
+      <p class="center info">Can you do better?!?</p>
+    </div>
+    <div v-if="errorMessage.length > 0">
+      <p class="center error">
+        {{ errorMessage }}
+      </p>
     </div>
   </div>
 </template>
@@ -56,7 +71,7 @@ import { DXResponse } from 'src/models/Support/dxterity';
 import { UtilityInstance } from 'src/models/Support/global';
 import { DboVPuzzleOfTheDay } from 'src/models/views/DboVPuzzleOfTheDay';
 import { ref } from 'vue';
-import { DboVSolutionRanking } from 'src/models/views/DboVSolutionRanking';
+import { DboVShareSolution } from 'src/models/views/DboVShareSolution';
 import { useRoute } from 'vue-router';
 
 export default {
@@ -64,12 +79,9 @@ export default {
   data() {
     return {
       utilityInstance: UtilityInstance,
-      loadStep: 0,
       form: {
         cellInput: [] as string[],
       },
-      rankings: [] as DboVSolutionRanking[],
-      notes: '',
     };
   },
   setup() {
@@ -77,18 +89,38 @@ export default {
     const member = ref(new Member());
     const puzzle = ref(new DboVPuzzleOfTheDay());
     const loadStep = ref(0);
+    const shareSolution = ref(new DboVShareSolution());
+    const errorMessage = ref('');
+    const startDateFormatted = ref('');
 
     if (SessionStorage.getItem('member') != null) {
       member.value = SessionStorage.getItem('member') as Member;
     }
 
     const route = useRoute();
-    console.log(route.query);
-    api.getPuzzle(route.query.toString()).then(function (response: DXResponse) {
+    console.log(route.query.code);
+    let solutionCode = '';
+    if (route.query.code) {
+      solutionCode = route.query.code.toString();
+    }
+    api.getPuzzle(solutionCode).then(function (response: DXResponse) {
+      console.log('response', response);
       if (response.isValid) {
         puzzle.value = response.dataObject;
+        api
+          .getShareSolution(solutionCode)
+          .then(function (response: DXResponse) {
+            if (response.isValid) {
+              shareSolution.value = response.dataObject;
+            } else {
+              UtilityInstance.toastResponse(response);
+            }
+
+            loadStep.value++;
+          });
       } else {
-        UtilityInstance.toastResponse(response);
+        errorMessage.value = response.messages[0].content;
+        loadStep.value++;
       }
 
       loadStep.value++;
@@ -98,11 +130,15 @@ export default {
       api,
       member,
       puzzle,
+      shareSolution,
+      loadStep,
+      errorMessage,
+      startDateFormatted,
     };
   },
   computed: {
     loaded: function () {
-      return this.loadStep == 1;
+      return this.loadStep == 2;
     },
   },
 };

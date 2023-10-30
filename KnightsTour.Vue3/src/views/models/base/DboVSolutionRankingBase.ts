@@ -1,21 +1,21 @@
 /**
- * File:     Dbo.VSolutionRankingBase.ts
+ * File:     DboVSolutionRankingBase.ts
  * Location: src\views\models\base\
  * The class that represents the view model for DB view dbo.V_SolutionRanking.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:27 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 
 /**
-* Abstract Class: Dbo.VSolutionRankingBase
+* Abstract Class: DboVSolutionRankingBase
 *
-* Base class to define the @see Dbo.VSolutionRankingBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see Dbo.VSolutionRankingBase.
+* Base class to define the @see DboVSolutionRankingBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see DboVSolutionRankingBase.
 *
-* @implements {constructor} The constructor for the @see Dbo.VSolutionRankingBase class
+* @implements {constructor} The constructor for the @see DboVSolutionRankingBase class
 */
-export abstract class Dbo.VSolutionRankingBase {
+export abstract class DboVSolutionRankingBase {
   // *** Declarations ***
   /** The dbo.V_SolutionRanking MemberId field. */
   memberId: number;
@@ -28,7 +28,7 @@ export abstract class Dbo.VSolutionRankingBase {
 
   /**
   * Function [constructor]: 
-  * The constructor for the @see Dbo.VSolutionRankingBase class
+  * The constructor for the @see DboVSolutionRankingBase class
   */
   constructor() {
       this.memberId = 0;

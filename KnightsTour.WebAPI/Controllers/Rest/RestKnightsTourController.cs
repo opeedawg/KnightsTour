@@ -467,7 +467,6 @@ namespace WebAPI.RestControllers
             }
         }
 
-        #region Puzzle related
         [Route("getPuzzle/{code}")]
         [HttpGet]
         public async Task<IActionResult> GetPuzzle(string code)
@@ -499,25 +498,23 @@ namespace WebAPI.RestControllers
             }
         }
 
-
-        #region Puzzle related
-        [Route("getSolution/{code}")]
+        [Route("getShareSolution/{code}")]
         [HttpGet]
-        public async Task<IActionResult> GetSolution(string code)
+        public async Task<IActionResult> GetShareSolution(string code)
         {
-            return await ExecuteCommonAsync(_GetSolution, new dynamic[] { code });
+            return await ExecuteCommonAsync(_GetShareSolution, new dynamic[] { code });
         }
-        private IActionResult _GetSolution(dynamic[] arguments)
+        private IActionResult _GetShareSolution(dynamic[] arguments)
         {
             WebApiCallLog callLog = (WebApiCallLog)arguments[0];
 
             if (callLog.IsAuthorized())
             {
-                IActionResponse response = new ActionResponse("GetSolution");
+                IActionResponse response = new ActionResponse("GetShareSolution");
                 try
                 {
                     string code = callLog.Arguments[0];
-                    response.Append(new SolutionLogic(callLog.UserName).GetSolutionByCode(code, this.Request));
+                    response.Append(new SolutionLogic(callLog.UserName).GetShareSolutionByCode(code, this.Request));
                 }
                 catch (Exception exception)
                 {

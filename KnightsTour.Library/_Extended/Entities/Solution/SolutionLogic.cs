@@ -135,7 +135,8 @@ namespace KnightsTour
                         MemberId = memberId,
                         SolutionStartDate = DateTime.Now,
                         SolutionDuration = null,
-                        Path = puzzle.Path
+                        Path = puzzle.Path,
+                        Code = Guid.NewGuid().ToString(),
                     };
 
                     response.Append(Insert(newSolution));
@@ -273,14 +274,14 @@ namespace KnightsTour
 
             return new Solution(result);
         }
-        public IActionResponse GetSolutionByCode(string code, HttpRequest request)
+        public IActionResponse GetShareSolutionByCode(string code, HttpRequest request)
         {
-            IActionResponse response = new ActionResponse($"GetSolutionByCode ({code})");
+            IActionResponse response = new ActionResponse($"GetShareSolutionByCode ({code})");
             try
             {
                 var result = StorageHandler.GetRecord(new StorageStatement()
                 {
-                    Statement = "SELECT * FROM [Solution] WHERE Code = @code;",
+                    Statement = "SELECT * FROM [V_ShareSolution] WHERE Code = @code;",
                     Parameters = new List<IParameter>() {
                         new GenericParameter("@code", code),
                     }
@@ -288,13 +289,13 @@ namespace KnightsTour
 
                 if (result != null)
                 {
-                    response.DataObject = new Solution(result).ToLite();
+                    response.DataObject = new DboVShareSolution(result);
                 }
             }
             catch (Exception exception)
             {
                 response.Append(exception);
-                EventHistoryLogic.Add(Enumerations.EventType.Exception, $"{{function: \"SolutionLogic.GetSolutionByCode({code})\", exception: \"{GetCompleteExceptionMessage(exception)}\"}}", request);
+                EventHistoryLogic.Add(Enumerations.EventType.Exception, $"{{function: \"SolutionLogic.GetShareSolutionByCode({code})\", exception: \"{GetCompleteExceptionMessage(exception)}\"}}", request);
             }
 
 

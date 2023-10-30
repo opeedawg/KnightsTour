@@ -1,23 +1,23 @@
 /**
- * File:     Dbo.VMemberSolutionBase.ts
+ * File:     DboVMemberSolutionBase.ts
  * Location: src\views\models\base\
  * The class that represents the view model for DB view dbo.V_MemberSolution.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:27 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 // Imports
 import moment from 'moment';
 
 /**
-* Abstract Class: Dbo.VMemberSolutionBase
+* Abstract Class: DboVMemberSolutionBase
 *
-* Base class to define the @see Dbo.VMemberSolutionBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see Dbo.VMemberSolutionBase.
+* Base class to define the @see DboVMemberSolutionBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see DboVMemberSolutionBase.
 *
-* @implements {constructor} The constructor for the @see Dbo.VMemberSolutionBase class
+* @implements {constructor} The constructor for the @see DboVMemberSolutionBase class
 */
-export abstract class Dbo.VMemberSolutionBase {
+export abstract class DboVMemberSolutionBase {
   // *** Declarations ***
   /** The dbo.V_MemberSolution Cols field. */
   cols: number;
@@ -40,7 +40,7 @@ export abstract class Dbo.VMemberSolutionBase {
 
   /**
   * Function [constructor]: 
-  * The constructor for the @see Dbo.VMemberSolutionBase class
+  * The constructor for the @see DboVMemberSolutionBase class
   */
   constructor() {
       this.cols = 0;

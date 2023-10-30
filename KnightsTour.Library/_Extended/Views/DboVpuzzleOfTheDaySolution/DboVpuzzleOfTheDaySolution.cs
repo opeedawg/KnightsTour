@@ -58,6 +58,36 @@ namespace KnightsTour
         #endregion Extended Declarations
 
         #region Extended Properties
+        public string SolutionStartDateFormatted 
+        {
+            get 
+            {
+                return SolutionStartDate.ToString("dddd MMMM dd yyyy");
+            }
+        }
+        public string SolutionDurationFormatted
+        {
+            get
+            {
+                if (SolutionDuration < 60)
+                    return $"{SolutionDuration} seconds";
+                else
+                    return $"{SolutionDuration / 60} minutes and {SolutionDuration % 60} seconds";
+            }
+        }
+        public List<List<int>> MemberCells
+        {
+            get
+            {
+                List<List<int>> cells = new List<List<int>>();
+                if (!string.IsNullOrEmpty(MemberPath))
+                {
+                    cells = Newtonsoft.Json.JsonConvert.DeserializeObject<List<List<int>>>(MemberPath.Split(':')[1].Replace("}", ""));
+                }
+
+                return cells;
+            }
+        }
         #endregion Extended Properties
 
         #region Extended Methods

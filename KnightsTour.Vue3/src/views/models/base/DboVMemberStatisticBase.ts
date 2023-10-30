@@ -1,23 +1,23 @@
 /**
- * File:     Dbo.VMemberStatisticBase.ts
+ * File:     DboVMemberStatisticBase.ts
  * Location: src\views\models\base\
  * The class that represents the view model for DB view dbo.V_MemberStatistics.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:27 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 // Imports
 import moment from 'moment';
 
 /**
-* Abstract Class: Dbo.VMemberStatisticBase
+* Abstract Class: DboVMemberStatisticBase
 *
-* Base class to define the @see Dbo.VMemberStatisticBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see Dbo.VMemberStatisticBase.
+* Base class to define the @see DboVMemberStatisticBase model. It is highly recommended NOT to modify this class, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided class - @see DboVMemberStatisticBase.
 *
-* @implements {constructor} The constructor for the @see Dbo.VMemberStatisticBase class
+* @implements {constructor} The constructor for the @see DboVMemberStatisticBase class
 */
-export abstract class Dbo.VMemberStatisticBase {
+export abstract class DboVMemberStatisticBase {
   // *** Declarations ***
   /** The dbo.V_MemberStatistics AverageBeginnerTime field. */
   averageBeginnerTime: number;
@@ -88,7 +88,7 @@ export abstract class Dbo.VMemberStatisticBase {
 
   /**
   * Function [constructor]: 
-  * The constructor for the @see Dbo.VMemberStatisticBase class
+  * The constructor for the @see DboVMemberStatisticBase class
   */
   constructor() {
       this.averageBeginnerTime = 0;

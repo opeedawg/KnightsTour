@@ -8,6 +8,10 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('src/pages/HowToPlay.vue') },
       {
+        path: ScreenRoute.ShareSolution,
+        component: () => import('src/pages/SharePage.vue'),
+      },
+      {
         path: ScreenRoute.HowToPlay,
         component: () => import('src/pages/HowToPlay.vue'),
       },

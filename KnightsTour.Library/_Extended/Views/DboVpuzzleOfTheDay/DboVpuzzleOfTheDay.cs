@@ -59,25 +59,17 @@ namespace KnightsTour
         #endregion Extended Declarations
 
         #region Extended Properties
-        public DboVPuzzleOfTheDaySolution MemberSolution 
+        public DboVPuzzleOfTheDaySolution MemberSolution
         {
             get
             {
-                if(memberSolution == null)
-                {
-                    memberSolution = new DboVPuzzleOfTheDaySolution();
-                }
-
                 return memberSolution;
             }
             set
-            { 
+            {
                 memberSolution = value;
             }
         }
-        #endregion Extended Properties
-
-        #region Extended Methods
         public string PuzzleDayFormatted
         {
             get
@@ -85,11 +77,10 @@ namespace KnightsTour
                 return PuzzleOfTheDayDate.ToString("dddd MMMM d, yyyy");
             }
         }
-        
         public List<int> ColIndexes
         {
             get
-            { 
+            {
                 List<int> cols = new List<int>();
                 for (int i = 0; i < Cols; i++)
                 {
@@ -122,13 +113,16 @@ namespace KnightsTour
 
                     return cells;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     return new List<List<int>>();
                 }
             }
         }
-            #endregion Extended Methods
+        #endregion Extended Properties
 
-        } // Class
+        #region Extended Methods
+        #endregion Extended Methods
+
+    } // Class
 } // Namespace

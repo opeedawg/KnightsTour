@@ -10,6 +10,8 @@ export enum ViewEnum {
   DboVPuzzleOfTheDay = 3,
   /** DB view: 'dbo.V_PuzzleOfTheDaySolution' */
   DboVPuzzleOfTheDaySolution = 4,
+  /** DB view: 'dbo.V_ShareSolution' */
+  DboVShareSolution = 5,
   /** DB view: 'dbo.V_SolutionRanking' */
-  DboVSolutionRanking = 5,
+  DboVSolutionRanking = 6,
 }

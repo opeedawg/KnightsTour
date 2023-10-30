@@ -4,7 +4,7 @@
  * Service to access all model (common) Board api calls including foreign key and child relationships. It is highly recommended NOT to modify this file, it will be overwritten to stay in sync with the model.  You can overwrite or extend the functionality in the provided see file Board.service.ts.
  * 
  * @author DXterity8 Version 8.6 <https://dxteritysolutions.com/>
- * Generated on October 21, 2023 at 9:45:26 AM
+ * Generated on October 26, 2023 at 9:31:47 AM
  */
 
 // Imports

@@ -1,6 +1,6 @@
 export enum DXMessageType {
-  Positive = 0,
-  Negative = 1,
+  Positive = 1,
+  Negative = 4,
   Information = 2,
   Warning = 3,
 }
